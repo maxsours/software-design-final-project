@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">GameCentre</string>
+    <string-array name="size_array">
+        <item>3x3</item>
+        <item>4x4</item>
+        <item>5x5</item>
+    </string-array>
+    <string-array name="number_or_picture_array">
+        <item>Play with Number Tiles</item>
+        <item>Play with Picture Tiles</item>
+    </string-array>
+    <string name="title_activity_score">ScoreActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+</resources>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="size_3">3 x 3</string>
+    <string name="size_4">4 x 4</string>
+    <string name="size_5">5 x 5</string>
+    <string name="size_3_title"> Your High Score for 3 x 3</string>
+    <string name="size_4_title"> Your High Score for 4 x 4</string>
+    <string name="size_5_title"> Your High Score for 5 x 5</string>
+    <string name="summary" >Score Summary</string>
+    <string name="game_summary"> Your High Score for Each Game</string>
+</resources>
