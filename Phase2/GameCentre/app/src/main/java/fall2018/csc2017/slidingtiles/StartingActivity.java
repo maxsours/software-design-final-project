@@ -53,7 +53,7 @@ public class StartingActivity extends AppCompatActivity {
     /**
      * Username of active user. Not the user itself because it can't get passed through an intent.
      */
-    private User activeUser = null;
+    private User activeUser;
     /**
      * The number of undos allowed.
      */
@@ -68,14 +68,45 @@ public class StartingActivity extends AppCompatActivity {
         addLoadButtonListener();
         addSaveButtonListener();
         loadUsers();
+        activeUser = getUserFromUsername(getIntent().getStringExtra("activeUser"));
+        displayUserGreeting();
+        /*
         addLoginButtonListener();
         addLogoutButtonListener();
         addCreateAccountListener();
+        */
         addHighScoreButtonListener();
         addNewGameButton();
         addUserSummaryButtonListener();
     }
 
+    /**
+     * Given a username, return the user
+     * @param username the username
+     * @return the user with the input username
+     */
+    public User getUserFromUsername(String username){
+        if (username != null) {
+            for (User user : users) {
+                if (user.getUsername().equals(username)) {
+                    return user;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Display the user greeting.
+     */
+    public void displayUserGreeting(){
+        TextView userGreeting = findViewById(R.id.userGreeting);
+        if (activeUser != null) {
+            userGreeting.setText("Welcome, " + activeUser + "!");
+        } else {
+            userGreeting.setText("Welcome, Guest!");
+        }
+    }
 
     /**
      * Gets the list of users from a file.
@@ -422,9 +453,9 @@ public class StartingActivity extends AppCompatActivity {
     }
 
     /**
-     * save the user when the login button
+     * Save the username of the user that is logged in
      *
-     * @param username
+     * @param username the username of the user
      */
     public void saveLastUser(String username){
         try {

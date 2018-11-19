@@ -10,20 +10,22 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity android:name=".StartingActivity">
+        </activity>
+        <activity android:name=".GameActivity" />
+        <activity
+            android:name=".ScoreActivity"
+            android:label="@string/title_activity_score" />
+        <activity
+            android:name=".GameModeSelection"
+            android:theme="@style/AppTheme.TranslucentCloseOnTouch" />
+        <activity android:name=".UserSummaryActivity" />
+        <activity android:name=".ActualStartingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".GameActivity" />
-        <activity
-            android:name=".ScoreActivity"
-            android:label="@string/title_activity_score" />
-        <activity android:name=".GameModeSelection"
-            android:theme="@style/AppTheme.TranslucentCloseOnTouch"
-            ></activity>
-        <activity android:name=".UserSummaryActivity"></activity>
     </application>
 
 </manifest>
