@@ -1,0 +1,125 @@
+The disclosed txt file contains the contents of the former project's "BitmapSpliceSave" class.
+The objective of the contents within this class were for the use of inserting customized pictures
+from the device to become background for the tiles. as per the "Bonus" section of the project.
+The contents of the class were prior located in the StartingActivity Class where in along with the
+imports provided, it responded to a button Click event  to access the users media storage and select
+an image. It would then take this raw image and convert it into a bitmap format where it was then
+spliced and sent as an array of bitmaps. Finally, each bitmap member of the array was to be saved
+as an individual PNG file so that they may be accessed by the tile Button and its setBackground method
+that accepts drawables. The reason this did not occur was because the saved bitmaps were not being
+recognized upon being saved as a file and so they could not be retrieved when needed.
+
+
+package fall2018.csc2017.slidingtiles;
+
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Environment;
+import android.view.View;
+import android.widget.Toast;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+
+import static android.app.Activity.RESULT_OK;
+import static fall2018.csc2017.slidingtiles.StartingActivity.IMAGE_GALLERY_REQUEST;
+
+public class BitmapSpliceSave {
+
+    /**
+     *
+     * @param v this is the view which needs accessing to look through the gallery
+     */
+    public void OnBackgroundButtonClick(View v) {
+        Intent PhotoUser = new Intent(Intent.ACTION_PICK);
+        File BackgroundImg = Environment.getExternalStoragePublicDirectory
+                (Environment.DIRECTORY_PICTURES);
+        String BackgroundImgPath = BackgroundImg.getPath();
+        Uri data = Uri.parse(BackgroundImgPath);
+
+        PhotoUser.setDataAndType(data,"image/*");
+
+        //startActivityForResult(PhotoUser, IMAGE_GALLERY_REQUEST);
+    }
+
+    /**
+     *
+     * @param requestCode this takes an id from the background select to get the picture
+     * @param resultCode this is what evaluates if someone has selected a picture
+     * @param data this is the raw data of the input stream, it becomes a bitmap later
+     */
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == IMAGE_GALLERY_REQUEST) {
+                Uri ImageUri = data.getData();
+                InputStream inputStream;
+                /*
+                try {
+                    inputStream = getContentResolver().openInputStream(ImageUri);
+                    Bitmap image = BitmapFactory.decodeStream(inputStream);
+                    Bitmap[] threeList = new Bitmap[9];
+                    threeList = pieceBitmap(image, 3);
+                    //saverBitmap(threeList, "three_");
+                    Bitmap[] fourList = new Bitmap[16];
+                    fourList = pieceBitmap(image, 4);
+                    //saverBitmap(fourList, "four_");
+                    Bitmap[] fiveList = new Bitmap[25];
+                    fiveList = pieceBitmap(image, 5);
+                    //saverBitmap(fiveList, "five_");
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    //Toast.makeText(this, "Unable to open image", Toast.LENGTH_LONG).show();
+                }
+                */
+
+            }
+        }
+    }
+
+    /**
+     *
+     * @param picture the bitmap picture passed through
+     * @param size this adjusts depending on gameboard
+     * @return an array of bitmaps
+     */
+    private Bitmap[] pieceBitmap(Bitmap picture, int size)
+    {
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(picture, 244*size, 323*size, true);
+        Bitmap[] imgs = new Bitmap[size*size];
+
+        int count = 0;
+        for (int i = 0; i < 3; i++) {
+
+            int posY = 323 * i;
+            for (int j = 0; j < 3; j++) {
+                int posX = 244 * j;
+                imgs[count] = Bitmap.createBitmap(scaledBitmap, posX, posY, 244, 323);
+                count++;
+            }
+        }
+        return imgs;
+    }
+
+    /**
+     *
+     * @param picture this takes a picture array and individually saves them to a png file, incomplete
+     * @param fileName this was the filename each would get saved to
+     */
+    public void saverBitmap(Bitmap[] picture, String fileName) {
+        for (int i = 0; i < picture.length; i++) {
+            String filer = fileName + Integer.toString(i);
+            try (FileOutputStream out = new FileOutputStream(filer)) {
+                picture[i].compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instanc
+                // PNG is a lossless format, the compression factor (100) is ignored
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
