@@ -19,6 +19,11 @@ class BoardManager implements Serializable {
     private Board board;
 
     /**
+     * The number of inversions on the current board.
+     */
+    private int numInver;
+
+    /**
      * Manage a board that has been pre-populated.
      * @param board the board
      */
@@ -50,8 +55,12 @@ class BoardManager implements Serializable {
         Collections.shuffle(tiles);
 
         this.board = new Board(tiles, numUndos);
-        int count = countInversions(tiles);
-
+        this.numInver = countInversions(tiles);
+        boolean solvable = isSolvable();
+        System.out.print("Number of inversions: ");
+        System.out.println(numInver);
+        System.out.print("Solvable: ");
+        System.out.println(solvable);
     }
 
 
@@ -68,6 +77,9 @@ class BoardManager implements Serializable {
         for (int i = 0; i < size - 1; i++) {
             for (int j = i + 1; j < size; j++) {
                 if ((tiles.get(i).getId() > tiles.get(j).getId()) && ((tiles.get(i).getId() != size) || (tiles.get(j).getId() != size))){
+                    System.out.print(tiles.get(i).getId());
+                    System.out.print(" inversion with ");
+                    System.out.println(tiles.get(j).getId());
                     count += 1;
                 }
             }
@@ -75,8 +87,102 @@ class BoardManager implements Serializable {
         return count;
     }
 
+    /**
+     * Determines if the current board is solvable.
+     * formula adapted from www.cs.princeton.edu/courses/archive/spr18/cos226/assignments/8puzzle/index.html
+     * @return whether the board is solvable.
+     */
 
+    private boolean isSolvable(){
+        if ((Board.NUM_ROWS % 2) != 0)
+            return (numInver % 2 == 0);
+        else {
+            //iff the number of inversions plus the row of the blank square is odd.
+            int blankRow = getBlankTileRow();
+            return ((numInver + blankRow) % 2 != 0);
+        }
+    }
 
+    /**
+     * @param size_board the size of the current game board.
+     * @return the position of the blank tile from row-order.
+     */
+    private int getBlankPosition(int size_board){
+        int count = 0;
+        for (Tile tile: this.board){
+            count += 1;
+            if (tile.getId() == size_board)
+                    break;
+        }
+        return count;
+    }
+
+    /**
+     * get the row of the blank tile on the board.
+     * @return the row where the blank tile is on.
+     */
+    private int getBlankTileRow(){
+        int size = this.board.numTiles();
+        if (size == 9)
+            return blankTileRow3x3(getBlankPosition(size));
+        else if (size == 16)
+            return blankTileRow4x4(getBlankPosition(size));
+        else if (size == 25)
+            return blankTileRow5x5(getBlankPosition(size));
+        return 0;
+    }
+    /**
+     * Determine the row in which the blank tile is placed in a 3x3 board.
+     * @param position the position blank tile is on in row-major order.
+     * @return the row which the blank tile is in.
+     */
+    private int blankTileRow3x3(int position){
+        if (1 <= position && position <= 3)
+            return 1;
+        else if (4 <= position && position <= 6)
+            return 2;
+        else if (7 <= position && position <= 9)
+            return 3;
+        else
+            return 1;
+    }
+
+    /**
+     * Determine the row in which the blank tile is placed in a 4x4 board.
+     * @param position the position the blank tile is on in row-major order.
+     * @return the row which the blank tile is in.
+     */
+    private int blankTileRow4x4(int position){
+        if (1 <= position && position <= 4)
+            return 1;
+        else if (5 <= position && position <= 8)
+            return 2;
+        else if (9 <= position && position <= 12)
+            return 3;
+        else if (13 <= position && position <= 16)
+            return 4;
+        else
+            return 1;
+    }
+    /**
+     * Determine the row in which the blank tile is placed in a 5x5 board.
+     * @param  position the posiiton the blank tile is on in row-major order.
+     * @return the row which the blank tile is in.
+     */
+    private int blankTileRow5x5(int position){
+        if (1 <= position && position <= 5)
+            return 1;
+        else if (6 <= position && position <= 10)
+            return 2;
+        else if (11 <= position && position <= 15)
+            return 3;
+        else if (16 <= position && position <= 20)
+            return 4;
+        else if (21 <= position && position <= 25)
+            return 5;
+        else
+            return 1;
+    }
     /**
      * Return whether the tiles are in row-major order.
      *
