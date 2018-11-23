@@ -44,11 +44,38 @@ class BoardManager implements Serializable {
         List<Tile> tiles = new ArrayList<>();
         final int numTiles = Board.NUM_ROWS * Board.NUM_COLS;
         for (int tileNum = 0; tileNum != numTiles; tileNum++) {
+
             tiles.add(new Tile(tileNum, res));
         }
         Collections.shuffle(tiles);
+
         this.board = new Board(tiles, numUndos);
+        int count = countInversions(tiles);
+
     }
+
+
+
+
+    /**
+     * Returns the numbers of inversions on the board.
+     * @return the number of inversions
+     */
+    private int countInversions(List<Tile> tiles) {
+        int count = 0;
+        int size = tiles.size();
+
+        for (int i = 0; i < size - 1; i++) {
+            for (int j = i + 1; j < size; j++) {
+                if ((tiles.get(i).getId() > tiles.get(j).getId()) && ((tiles.get(i).getId() != size) || (tiles.get(j).getId() != size))){
+                    count += 1;
+                }
+            }
+        }
+        return count;
+    }
+
+
 
     /**
      * Return whether the tiles are in row-major order.
