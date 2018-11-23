@@ -44,6 +44,7 @@ public class ActualStartingActivity extends AppCompatActivity {
         addLogoutButtonListener();
         addCreateAccountListener();
         addSlidingTilesButtonListener();
+        addDraughtsButtonListener();
     }
 
 
@@ -250,5 +251,34 @@ public class ActualStartingActivity extends AppCompatActivity {
     private void makeToastWrongPasswordText() {
         Toast.makeText(this, "Incorrect Password", Toast.LENGTH_SHORT).show();
     }
+
+    /**
+     * Button for draughts game on Game Centre.
+     */
+    private Button draughtsbutton;
+
+    /**
+     * Activate draughts button.
+     */
+    private void addDraughtsButtonListener(){
+        draughtsbutton = findViewById(R.id.draughtsbutton);
+
+        draughtsbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openDraughts();
+            }
+        });
+    }
+
+    /**
+     * Transition to draughts game.
+     */
+    public void openDraughts () {
+        Intent intent = new Intent(this, fall2018.csc2017.slidingtiles.
+                draughts.MyCheckersActivity.class);
+        startActivity(intent);
+    }
+
 }
 
