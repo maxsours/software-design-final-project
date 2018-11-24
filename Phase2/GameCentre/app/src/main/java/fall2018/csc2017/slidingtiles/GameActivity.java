@@ -162,7 +162,7 @@ public class GameActivity extends AppCompatActivity implements Observer {
             nextPos++;
         }
         //auto save the game for every 3 moves
-        if (board.getTotalMove() != 0 && board.getTotalMove() % 3 == 0 && !board.getLastMoveUndo()) {
+        if (board.getTotalMove() != 0 && board.getTotalMove() % 3 == 0) {
             saveToFile(SAVE_FILENAME);
             saveToFile(StartingActivity.TEMP_SAVE_FILENAME);
         }
