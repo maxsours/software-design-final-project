@@ -57,14 +57,29 @@ class BoardManager implements Serializable {
         this.board = new Board(tiles, numUndos);
         this.numInver = countInversions(tiles);
         boolean solvable = isSolvable();
+        if (!solvable) {
+            fixUnsolvableBoard(this.board);
+            System.out.println("Fixed board");
+        }
         System.out.print("Number of inversions: ");
         System.out.println(numInver);
         System.out.print("Solvable: ");
         System.out.println(solvable);
     }
 
+    /**
+     * Fixes the unsolvable board to make it solvable.
+     * @param board the board to fix.
+     */
+    private void fixUnsolvableBoard(Board board) {
+        int blankTilePos = getBlankPosition(board.numTiles());
 
+        if ((blankTilePos != 1) && (blankTilePos != 2))
+            board.swapTiles(0,0,0,1);
+        else
+            board.swapTiles(Board.NUM_ROWS -1, Board.NUM_COLS -1, Board.NUM_ROWS -1, Board.NUM_COLS -2);
 
+    }
 
     /**
      * Returns the numbers of inversions on the board.
@@ -76,7 +91,7 @@ class BoardManager implements Serializable {
 
         for (int i = 0; i < size - 1; i++) {
             for (int j = i + 1; j < size; j++) {
-                if ((tiles.get(i).getId() > tiles.get(j).getId()) && ((tiles.get(i).getId() != size) || (tiles.get(j).getId() != size))){
+                if ((tiles.get(i).getId() > tiles.get(j).getId()) && ((tiles.get(i).getId() != size) && (tiles.get(j).getId() != size))){
                     System.out.print(tiles.get(i).getId());
                     System.out.print(" inversion with ");
                     System.out.println(tiles.get(j).getId());
