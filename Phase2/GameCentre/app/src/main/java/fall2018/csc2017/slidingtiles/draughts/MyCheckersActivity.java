@@ -47,8 +47,8 @@ public class MyCheckersActivity extends AppCompatActivity {
         //
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.registerOnSharedPreferenceChangeListener(preferencesChangeListener);
-        prefDifficulty = sharedPreferences.getString(DIFFICULTY, null);
-        prefAllowAnyMove = sharedPreferences.getBoolean(ANY_MOVE, false);
+        prefDifficulty = sharedPreferences.getString(DIFFICULTY, "Easy");
+        prefAllowAnyMove = sharedPreferences.getBoolean(ANY_MOVE, true);
     }
 
     @Override
@@ -82,7 +82,7 @@ public class MyCheckersActivity extends AppCompatActivity {
                 break;
             case R.id.about_menu_icon:
                 AlertDialog dialog = new AlertDialog.Builder(this)
-                        .setMessage("Checkers by Greg. \nVery Special Thanks to Charlie, Eli, and Xavy.")
+                        .setMessage("Checkers Game PopUp")
                         .setCancelable(false)
                         .setPositiveButton("Okay", null)
                         .create();
@@ -288,8 +288,8 @@ public class MyCheckersActivity extends AppCompatActivity {
                 @Override
                 public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
                     // update preferences
-                    prefDifficulty = sharedPreferences.getString(DIFFICULTY, null);
-                    prefAllowAnyMove = sharedPreferences.getBoolean(ANY_MOVE, false);
+                    prefDifficulty = sharedPreferences.getString(DIFFICULTY, "Easy");
+                    prefAllowAnyMove = sharedPreferences.getBoolean(ANY_MOVE, true);
 
                     gamelogic.setAnyMove(prefAllowAnyMove);
 
