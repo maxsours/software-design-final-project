@@ -68,9 +68,9 @@ class BoardManager implements Serializable {
         int blankTilePos = getBlankPosition(board.numTiles());
 
         if ((blankTilePos != 1) && (blankTilePos != 2))
-            board.swapTiles(0,0,0,1);
+            board.swapTilesNoHistory(0,0,0,1);
         else
-            board.swapTiles(Board.NUM_ROWS -1, Board.NUM_COLS -1, Board.NUM_ROWS -1, Board.NUM_COLS -2);
+            board.swapTilesNoHistory(Board.NUM_ROWS -1, Board.NUM_COLS -1, Board.NUM_ROWS -1, Board.NUM_COLS -2);
 
     }
 

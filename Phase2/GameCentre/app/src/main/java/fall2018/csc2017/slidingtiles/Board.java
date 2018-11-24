@@ -46,15 +46,7 @@ public class Board extends Observable implements Serializable, Iterable<Tile> {
      */
     private List<int[]> moves = new ArrayList<>();
 
-    /**
-     * Flag to determine momentary undo.
-     **/
-    private boolean undoMove = false;
 
-    /**
-     * Flag to check if last move was an undo long term.
-     */
-    private boolean lastMoveUndo = false;
     /**
      * Number of undos available.
      */
@@ -78,13 +70,6 @@ public class Board extends Observable implements Serializable, Iterable<Tile> {
     }
 
     /**
-     *
-     * @return whether the last move was an undo.
-     * */
-    public boolean getLastMoveUndo(){
-        return this.lastMoveUndo;
-    }
-    /**
      * Return the number of tiles on the board.
      * @return the number of tiles on the board
      */
@@ -107,9 +92,27 @@ public class Board extends Observable implements Serializable, Iterable<Tile> {
      * Get the number of undos left.
      * @return number of undos.
      */
-    public int getNumUndos(){
+    int getNumUndos(){
         return this.numUndos;
     }
+
+    /**
+     * Swaps the tiles at (ro1, col1) and (row2, col2) and does NOT add the move to move history.
+     * @param row1 the first tiles row
+     * @param col1 the first tiles column
+     * @param row2 the second tiles row
+     * @param col2 the second tiles column
+     */
+    void swapTilesNoHistory(int row1, int col1, int row2, int col2){
+        Tile temp = getTile(row1, col1);
+        tiles[row1][col1] = getTile(row2, col2);
+        tiles[row2][col2] = temp;
+
+        setChanged();
+        notifyObservers();
+    }
+
+
     /**
      * Swap the tiles at (row1, col1) and (row2, col2) and adds the move to move history.
      *
@@ -121,11 +124,8 @@ public class Board extends Observable implements Serializable, Iterable<Tile> {
     void swapTiles(int row1, int col1, int row2, int col2) {
         Tile temp = getTile(row1, col1);
         int[] move = {row1,col1,row2,col2};
-        if (!this.undoMove){
-            addMove(move);
-            this.lastMoveUndo = false;
-            totalMove++;
-        }
+        addMove(move);
+        totalMove++;
         tiles[row1][col1] = getTile(row2, col2);
         tiles[row2][col2] = temp;
 
@@ -157,10 +157,7 @@ public class Board extends Observable implements Serializable, Iterable<Tile> {
     void popUndoMove(){
         if ((this.moves.size() != 0) && (this.numUndos > 0)) {
             int[] move = this.moves.remove(moves.size() - 1);
-            this.undoMove = true;
-            this.lastMoveUndo = true;
-            swapTiles(move[0], move[1], move[2], move[3]);
-            this.undoMove = false;
+            swapTilesNoHistory(move[0], move[1], move[2], move[3]);
 
             this.numUndos -= 1;
         }
@@ -170,7 +167,7 @@ public class Board extends Observable implements Serializable, Iterable<Tile> {
      * Get total moves.
      * @return the total number of moves
      */
-    public int getTotalMove(){
+    int getTotalMove(){
         return this.totalMove;
     }
 
