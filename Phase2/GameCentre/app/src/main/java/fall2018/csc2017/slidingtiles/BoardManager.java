@@ -19,11 +19,6 @@ class BoardManager implements Serializable {
     private Board board;
 
     /**
-     * The number of inversions on the current board.
-     */
-    private int numInver;
-
-    /**
      * Manage a board that has been pre-populated.
      * @param board the board
      */
@@ -53,22 +48,20 @@ class BoardManager implements Serializable {
             tiles.add(new Tile(tileNum, res));
         }
         Collections.shuffle(tiles);
-
         this.board = new Board(tiles, numUndos);
-        this.numInver = countInversions(tiles);
-        boolean solvable = isSolvable();
+
+        int numInver = countInversions(tiles);
+        boolean solvable = isSolvable(numInver);
         if (!solvable) {
             fixUnsolvableBoard(this.board);
-            System.out.println("Fixed board");
         }
-        System.out.print("Number of inversions: ");
-        System.out.println(numInver);
-        System.out.print("Solvable: ");
-        System.out.println(solvable);
+
+
     }
 
     /**
      * Fixes the unsolvable board to make it solvable.
+     * Adds or takes away an inversion from the board.
      * @param board the board to fix.
      */
     private void fixUnsolvableBoard(Board board) {
@@ -82,7 +75,7 @@ class BoardManager implements Serializable {
     }
 
     /**
-     * Returns the numbers of inversions on the board.
+     * Returns the numbers of inversions from a list row-major representation of the board.
      * @return the number of inversions
      */
     private int countInversions(List<Tile> tiles) {
@@ -92,9 +85,6 @@ class BoardManager implements Serializable {
         for (int i = 0; i < size - 1; i++) {
             for (int j = i + 1; j < size; j++) {
                 if ((tiles.get(i).getId() > tiles.get(j).getId()) && ((tiles.get(i).getId() != size) && (tiles.get(j).getId() != size))){
-                    System.out.print(tiles.get(i).getId());
-                    System.out.print(" inversion with ");
-                    System.out.println(tiles.get(j).getId());
                     count += 1;
                 }
             }
@@ -108,7 +98,7 @@ class BoardManager implements Serializable {
      * @return whether the board is solvable.
      */
 
-    private boolean isSolvable(){
+    private boolean isSolvable(int numInver){
         if ((Board.NUM_ROWS % 2) != 0)
             return (numInver % 2 == 0);
         else {
