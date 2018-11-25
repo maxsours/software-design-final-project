@@ -50,10 +50,9 @@ class BoardManager implements Serializable {
         Collections.shuffle(tiles);
         this.board = new Board(tiles, numUndos);
 
-        int numInver = countInversions(tiles);
-        boolean solvable = isSolvable(numInver);
+        boolean solvable = isSolvable();
         if (!solvable) {
-            fixUnsolvableBoard(this.board);
+            fixUnsolvableBoard();
         }
 
 
@@ -62,9 +61,8 @@ class BoardManager implements Serializable {
     /**
      * Fixes the unsolvable board to make it solvable.
      * Adds or takes away an inversion from the board.
-     * @param board the board to fix.
      */
-    private void fixUnsolvableBoard(Board board) {
+    void fixUnsolvableBoard() {
         int blankTilePos = getBlankPosition(board.numTiles());
 
         if ((blankTilePos != 1) && (blankTilePos != 2))
@@ -72,6 +70,14 @@ class BoardManager implements Serializable {
         else
             board.swapTiles(Board.NUM_ROWS -1, Board.NUM_COLS -1, Board.NUM_ROWS -1, Board.NUM_COLS -2);
 
+    }
+
+    private List<Tile> getTiles(){
+        List<Tile> tiles = new ArrayList<>();
+        for(Tile tile : board){
+            tiles.add(tile);
+        }
+        return tiles;
     }
 
     /**
@@ -97,8 +103,8 @@ class BoardManager implements Serializable {
      * formula adapted from www.cs.princeton.edu/courses/archive/spr18/cos226/assignments/8puzzle/index.html
      * @return whether the board is solvable.
      */
-
-    private boolean isSolvable(int numInver){
+   boolean isSolvable(){
+       int numInver = countInversions(getTiles());
         if ((Board.NUM_ROWS % 2) != 0)
             return (numInver % 2 == 0);
         else {
@@ -123,7 +129,8 @@ class BoardManager implements Serializable {
     }
 
     /**
-     * get the row of the blank tile on the board.
+     * get the row of the blank tile on the board, rows counting from the bottom
+     * For example, bottom row is row 1
      * @return the row where the blank tile is on.
      */
     private int getBlankTileRow(){
@@ -143,13 +150,13 @@ class BoardManager implements Serializable {
      */
     private int blankTileRow3x3(int position){
         if (1 <= position && position <= 3)
-            return 1;
+            return 3;
         else if (4 <= position && position <= 6)
             return 2;
         else if (7 <= position && position <= 9)
-            return 3;
-        else
             return 1;
+        else
+            return 3;
     }
 
     /**
@@ -159,15 +166,15 @@ class BoardManager implements Serializable {
      */
     private int blankTileRow4x4(int position){
         if (1 <= position && position <= 4)
-            return 1;
-        else if (5 <= position && position <= 8)
-            return 2;
-        else if (9 <= position && position <= 12)
-            return 3;
-        else if (13 <= position && position <= 16)
             return 4;
-        else
+        else if (5 <= position && position <= 8)
+            return 3;
+        else if (9 <= position && position <= 12)
+            return 2;
+        else if (13 <= position && position <= 16)
             return 1;
+        else
+            return 4;
     }
     /**
      * Determine the row in which the blank tile is placed in a 5x5 board.
@@ -176,17 +183,17 @@ class BoardManager implements Serializable {
      */
     private int blankTileRow5x5(int position){
         if (1 <= position && position <= 5)
-            return 1;
+            return 5;
         else if (6 <= position && position <= 10)
-            return 2;
+            return 4;
         else if (11 <= position && position <= 15)
             return 3;
         else if (16 <= position && position <= 20)
-            return 4;
+            return 2;
         else if (21 <= position && position <= 25)
-            return 5;
-        else
             return 1;
+        else
+            return 5;
     }
     /**
      * Return whether the tiles are in row-major order.

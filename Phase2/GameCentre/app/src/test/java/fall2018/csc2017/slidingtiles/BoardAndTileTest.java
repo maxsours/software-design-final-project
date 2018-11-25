@@ -37,7 +37,7 @@ public class BoardAndTileTest {
      */
     private void setUpCorrect() {
         List<Tile> tiles = makeTiles();
-        Board board = new Board(tiles);
+        Board board = new Board(tiles, 3);
         boardManager = new BoardManager(board);
     }
 
@@ -92,8 +92,21 @@ public class BoardAndTileTest {
     public void testIsValidTap() {
         setUpCorrect();
         assertEquals(true, boardManager.isValidTap(11));
-        assertEquals(true, boardManager.isValidTap(15));
+        assertEquals(false, boardManager.isValidTap(15));
         assertEquals(false, boardManager.isValidTap(10));
+    }
+
+    /**
+     * Test whether isSolvable() works.
+     */
+    @Test
+    public void testIsSolvable() {
+        setUpCorrect();
+        assertEquals(true, boardManager.isSolvable());
+        boardManager.getBoard().swapTiles(3, 3, 2, 2);
+        assertEquals(false, boardManager.isSolvable());
+        boardManager.fixUnsolvableBoard();
+        assertEquals(true, boardManager.isSolvable());
     }
 }
 
