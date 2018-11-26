@@ -70,9 +70,7 @@ public class StartingActivity extends AppCompatActivity {
         loadUsers();
         activeUser = getUserFromUsername(getIntent().getStringExtra("activeUser"));
         displayUserGreeting();
-        addHighScoreButtonListener();
         addNewGameButton();
-        //addUserSummaryButtonListener();
     }
 
     /**
@@ -123,35 +121,6 @@ public class StartingActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * activate the High Score button
-     */
-    private void addHighScoreButtonListener(){
-        Button highScoreButton = findViewById(R.id.HighScoreButton);
-        highScoreButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent myIntent = new Intent(StartingActivity.this, ScoreActivity.class);
-                StartingActivity.this.startActivity(myIntent);
-            }
-        });
-    }
-
-    /**
-     * activate the User Summary button
-     */
-    /**   private void addUserSummaryButtonListener(){
-        Button userSummaryButton = findViewById(R.id.SummaryButton);
-        userSummaryButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent myIntent = new Intent(StartingActivity.this, UserSummaryActivity.class);
-                StartingActivity.this.startActivity(myIntent);
-            }
-        });
-    }
-
-**/
     /**
      * Save the users to the user file.
      */
