@@ -72,7 +72,11 @@ class BoardManager implements Serializable {
 
     }
 
-    private List<Tile> getTiles(){
+    /**
+     * Get the tiles in the board manager
+     * @return the list of tiles
+     */
+    List<Tile> getTiles(){
         List<Tile> tiles = new ArrayList<>();
         for(Tile tile : board){
             tiles.add(tile);
