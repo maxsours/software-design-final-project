@@ -4,16 +4,16 @@
     <item
         android:id="@+id/navigation_home"
         android:icon="@drawable/ic_dashboard_black_24dp"
-        android:title="@string/size_3" />
+        android:title="Sliding Tiles" />
 
     <item
         android:id="@+id/navigation_dashboard"
         android:icon="@drawable/ic_dashboard_black_24dp"
-        android:title="@string/size_4" />
+        android:title="Checkers" />
 
     <item
         android:id="@+id/navigation_notifications"
         android:icon="@drawable/ic_dashboard_black_24dp"
-        android:title="@string/size_5" />
+        android:title="Blackjack" />
 
 </menu>

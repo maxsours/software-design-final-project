@@ -45,6 +45,7 @@ public class ActualStartingActivity extends AppCompatActivity {
         addCreateAccountListener();
         addSlidingTilesButtonListener();
         addDraughtsButtonListener();
+        addHighScoreButtonListener();
     }
 
 
@@ -147,6 +148,9 @@ public class ActualStartingActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 switchToSlidingTiles();
+                if(activeUser == null){
+                    saveLastUser("Guest");
+                }
             }
         });
     }
@@ -212,6 +216,23 @@ public class ActualStartingActivity extends AppCompatActivity {
     }
 
     /**
+     * activate the High Score button
+     */
+    private void addHighScoreButtonListener(){
+        Button highScoreButton = findViewById(R.id.HighScoreButton);
+        highScoreButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(ActualStartingActivity.this, ScoreActivity.class);
+                ActualStartingActivity.this.startActivity(myIntent);
+                if(activeUser == null){
+                    saveLastUser("Guest");
+                }
+            }
+        });
+    }
+
+    /**
      * Transition to sliding tiles game.
      */
     private void switchToSlidingTiles(){
@@ -267,6 +288,9 @@ public class ActualStartingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 openDraughts();
+                if(activeUser == null){
+                    saveLastUser("Guest");
+                }
             }
         });
     }
@@ -278,6 +302,10 @@ public class ActualStartingActivity extends AppCompatActivity {
         Intent intent = new Intent(this, fall2018.csc2017.slidingtiles.
                 draughts.MyCheckersActivity.class);
         startActivity(intent);
+    }
+
+    public User getActiveUser(){
+        return this.activeUser;
     }
 
 }
