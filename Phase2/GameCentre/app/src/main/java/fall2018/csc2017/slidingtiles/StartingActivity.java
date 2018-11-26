@@ -69,9 +69,8 @@ public class StartingActivity extends AppCompatActivity {
         addSaveButtonListener();
         loadUsers();
         activeUser = getUserFromUsername(getIntent().getStringExtra("activeUser"));
-        //displayUserGreeting();
-
-        //addHighScoreButtonListener();
+        displayUserGreeting();
+        addHighScoreButtonListener();
         addNewGameButton();
         //addUserSummaryButtonListener();
     }
@@ -127,7 +126,6 @@ public class StartingActivity extends AppCompatActivity {
     /**
      * activate the High Score button
      */
-    /**
     private void addHighScoreButtonListener(){
         Button highScoreButton = findViewById(R.id.HighScoreButton);
         highScoreButton.setOnClickListener(new View.OnClickListener() {
@@ -135,11 +133,10 @@ public class StartingActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent myIntent = new Intent(StartingActivity.this, ScoreActivity.class);
                 StartingActivity.this.startActivity(myIntent);
-                System.out.println("activeUser  is " + activeUser.getUsername());
             }
         });
     }
-**/
+
     /**
      * activate the User Summary button
      */
@@ -153,6 +150,7 @@ public class StartingActivity extends AppCompatActivity {
             }
         });
     }
+
 **/
     /**
      * Save the users to the user file.
@@ -167,6 +165,7 @@ public class StartingActivity extends AppCompatActivity {
             Log.e("Exception", "File write failed: " + e.toString());
         }
     }
+
 
     /**
      * Activate the load button.
