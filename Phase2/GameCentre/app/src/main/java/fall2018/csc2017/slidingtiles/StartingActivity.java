@@ -69,15 +69,11 @@ public class StartingActivity extends AppCompatActivity {
         addSaveButtonListener();
         loadUsers();
         activeUser = getUserFromUsername(getIntent().getStringExtra("activeUser"));
-        displayUserGreeting();
-        /*
-        addLoginButtonListener();
-        addLogoutButtonListener();
-        addCreateAccountListener();
-        */
-        addHighScoreButtonListener();
+        //displayUserGreeting();
+
+        //addHighScoreButtonListener();
         addNewGameButton();
-        addUserSummaryButtonListener();
+        //addUserSummaryButtonListener();
     }
 
     /**
@@ -129,36 +125,9 @@ public class StartingActivity extends AppCompatActivity {
     }
 
     /**
-     * Activate the login button
-     */
-    private void addLoginButtonListener() {
-        Button loginButton = findViewById(R.id.loginButton);
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String username = ((EditText)findViewById(R.id.usernameText)).getText().toString();
-                String password = ((EditText)findViewById(R.id.passwordText)).getText().toString();
-                User user = null;
-                for (User u : users){
-                    if (u.getUsername().equals(username)){
-                        user = u;
-                        saveLastUser(user.getUsername());
-                    }
-                }
-                if (user == null){
-                    makeToastWrongUsernameText();
-                } else if (user.getPassword().equals(password)) {
-                    login(user);
-                } else {
-                    makeToastWrongPasswordText();
-                }
-            }
-        });
-    }
-
-    /**
      * activate the High Score button
      */
+    /**
     private void addHighScoreButtonListener(){
         Button highScoreButton = findViewById(R.id.HighScoreButton);
         highScoreButton.setOnClickListener(new View.OnClickListener() {
@@ -166,14 +135,15 @@ public class StartingActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent myIntent = new Intent(StartingActivity.this, ScoreActivity.class);
                 StartingActivity.this.startActivity(myIntent);
+                System.out.println("activeUser  is " + activeUser.getUsername());
             }
         });
     }
-
+**/
     /**
      * activate the User Summary button
      */
-    private void addUserSummaryButtonListener(){
+    /**   private void addUserSummaryButtonListener(){
         Button userSummaryButton = findViewById(R.id.SummaryButton);
         userSummaryButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -183,79 +153,7 @@ public class StartingActivity extends AppCompatActivity {
             }
         });
     }
-
-    /**
-     * Logs the user in.
-     *
-     * @param user the user being logged in
-     */
-    private void login(User user){
-        TextView userGreeting = findViewById(R.id.userGreeting);
-        userGreeting.setText("Welcome, " + user + "!");
-        activeUser = user;
-        findViewById(R.id.usernameText).setVisibility(View.INVISIBLE);
-        findViewById(R.id.passwordText).setVisibility(View.INVISIBLE);
-        findViewById(R.id.createAccountButton).setVisibility(View.INVISIBLE);
-        findViewById(R.id.loginButton).setVisibility(View.INVISIBLE);
-        findViewById(R.id.logoutButton).setVisibility(View.VISIBLE);
-    }
-
-    /**
-     * Logs the user out.
-     */
-    private void logOut(){
-        TextView userGreeting = findViewById(R.id.userGreeting);
-        userGreeting.setText("");
-        activeUser = null;
-        findViewById(R.id.usernameText).setVisibility(View.VISIBLE);
-        findViewById(R.id.passwordText).setVisibility(View.VISIBLE);
-        findViewById(R.id.createAccountButton).setVisibility(View.VISIBLE);
-        findViewById(R.id.loginButton).setVisibility(View.VISIBLE);
-        findViewById(R.id.logoutButton).setVisibility(View.INVISIBLE);
-    }
-
-    /**
-     * Activates the logout button
-     */
-    private void addLogoutButtonListener(){
-        Button logoutButton = findViewById(R.id.logoutButton);
-        logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                logOut();
-                saveLastUser("Guest");
-            }
-        });
-    }
-
-    /**
-     * Activate the create account button
-     */
-    private void addCreateAccountListener(){
-        Button createAccountButton = findViewById(R.id.createAccountButton);
-        createAccountButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String username = ((EditText)findViewById(R.id.usernameText)).getText().toString();
-                String password = ((EditText)findViewById(R.id.passwordText)).getText().toString();
-                User user = new User(username, password);
-                boolean userCanBeAdded = true;
-                for (User u : users){
-                    if (user.equals(u)){
-                        makeToastUserAlreadyExistsText(u);
-                        userCanBeAdded = false;
-                        break;
-                    }
-                }
-                if (userCanBeAdded) {
-                    users.add(user);
-                    makeToastUserAddedText();
-                    saveUsers();
-                }
-            }
-        });
-    }
-
+**/
     /**
      * Save the users to the user file.
      */
@@ -269,37 +167,6 @@ public class StartingActivity extends AppCompatActivity {
             Log.e("Exception", "File write failed: " + e.toString());
         }
     }
-
-    /**
-     * Display that the new user was created correctly.
-     */
-    private void makeToastUserAddedText() {
-        Toast.makeText(this, "User Added", Toast.LENGTH_SHORT).show();
-    }
-
-    /**
-     * Display that the new user already exists
-     *
-     * @param user the user that already exists
-     */
-    private void makeToastUserAlreadyExistsText(User user) {
-        Toast.makeText(this, user + " Already Exists", Toast.LENGTH_SHORT).show();
-    }
-
-    /**
-     * Display that the username was not entered correctly.
-     */
-    private void makeToastWrongUsernameText() {
-        Toast.makeText(this, "Incorrect Username", Toast.LENGTH_SHORT).show();
-    }
-
-    /**
-     * Display that the password was not entered correctly.
-     */
-    private void makeToastWrongPasswordText() {
-        Toast.makeText(this, "Incorrect Password", Toast.LENGTH_SHORT).show();
-    }
-
 
     /**
      * Activate the load button.

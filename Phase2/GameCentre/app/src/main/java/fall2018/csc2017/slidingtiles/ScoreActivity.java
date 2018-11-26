@@ -38,7 +38,7 @@ public class ScoreActivity extends AppCompatActivity {
     /**
      * to indicate whether the score file is available
      */
-    private Boolean scoreFileExist = false;
+    private Boolean scoreFileExist;
 
     /**
      * display the correct score accordingly when user pressed on the BottomNavigationView icon
@@ -48,34 +48,69 @@ public class ScoreActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             loadLastUserFromFile(GameActivity.LAST_USER_FILE);
-            String path = lastUser + "_score_save_file.ser";
-            loadScoreFromFile(path);
+            String path;
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    mTextMessage.setText(R.string.size_3_title);
-                    mTextMessage.setTextSize(20);
+                    path = lastUser + "_slidingtiles_score_save_file.ser";
+                    scoreFileExist = false;
+                    loadScoreFromFile(path);
+                    mTextMessage.setTextSize(15);
                     if(!scoreFileExist){
-                        scoreTextMessage.setText("No record found for 3 x 3");
+                        scoreTextMessage.setText("No record found for Sliding Tile");
                     }else{
-                        scoreTextMessage.setText(appendScoreDetails(0,5));
+                        StringBuilder text = new StringBuilder();
+
+                        text.append(getResources().getString(R.string.size_3_title));
+                        text.append("\n");
+                        text.append(appendScoreDetails(0,5));
+                        text.append("\n");
+
+                        text.append(getResources().getString(R.string.size_4_title));
+                        text.append("\n");
+                        text.append(appendScoreDetails(5,10));
+                        text.append("\n");
+
+                        text.append(getResources().getString(R.string.size_5_title));
+                        text.append("\n");
+                        text.append(appendScoreDetails(10,15));
+                        text.append("\n");
+
+                        scoreTextMessage.setText(text);
                     }
                     return true;
+
                 case R.id.navigation_dashboard:
-                    mTextMessage.setText(R.string.size_4_title);
-                    mTextMessage.setTextSize(20);
+                    path = lastUser + "_checkers_score_save_file.ser";
+                    scoreFileExist = false;
+                    loadScoreFromFile(path);
+                    mTextMessage.setTextSize(15);
                     if(!scoreFileExist){
-                        scoreTextMessage.setText("No record found  for 4 x 4");
+                        scoreTextMessage.setText("No record found for Checkers");
                     }else{
-                        scoreTextMessage.setText(appendScoreDetails(5,10));
+                        StringBuilder text = new StringBuilder();
+                        text.append(appendCheckerScore(0,5));
+                        text.append("\n");
+                        text.append(appendCheckerScore(5,10));
+                        text.append("\n");
+                        text.append(appendCheckerScore(10,15));
+                        text.append("\n");
+                        text.append(appendCheckerScore(15,20));
+
+                        scoreTextMessage.setText(text);
                     }
                     return true;
+
                 case R.id.navigation_notifications:
-                    mTextMessage.setText(R.string.size_5_title);
-                    mTextMessage.setTextSize(20);
+                    path = lastUser + "_blackjack_score_save_file.ser";
+                    scoreFileExist = false;
+                    loadScoreFromFile(path);
+                    mTextMessage.setTextSize(15);
                     if(!scoreFileExist){
-                        scoreTextMessage.setText("No record found for 5 x 5");
+                        scoreTextMessage.setText("No record found for Checkers");
                     }else{
-                        scoreTextMessage.setText(appendScoreDetails(10,15));
+                        StringBuilder text = new StringBuilder();
+
+                        scoreTextMessage.setText(text);
                     }
                     return true;
             }
@@ -158,6 +193,24 @@ public class ScoreActivity extends AppCompatActivity {
                 scoreDetails.append("\n");
             }
         }
+        return scoreDetails;
+    }
+
+    public StringBuilder appendCheckerScore(int start, int end){
+        StringBuilder scoreDetails = new StringBuilder();
+        for(int counter = start; counter < end; counter ++){
+            if(scoreList.get(counter).getScore() != 0){
+                scoreDetails.append(scoreList.get(counter).getUser());
+                scoreDetails.append("\t\t\t\t");
+                scoreDetails.append(Integer.toString(scoreList.get(counter).getScore()));
+                scoreDetails.append("\t\t\t\t");
+                scoreDetails.append((scoreList.get(counter).getDifficulty()));
+                scoreDetails.append("\t\t\t\t");
+                scoreDetails.append(scoreList.get(counter).getDate());
+                scoreDetails.append("\n");
+            }
+        }
+        System.out.println(scoreDetails);
         return scoreDetails;
     }
 

@@ -10,11 +10,19 @@ public class Score implements Serializable, Comparable<Score> {
     private int score;
     private int puzzleSize;
     private String date;
+    private String difficulty;
 
-    public Score (String user,int score, int puzzleSize,String completionDate){
+    public Score(String user, int score, int puzzleSize, String completionDate) {
         this.user = user;
         this.score = score;
         this.puzzleSize = puzzleSize;
+        this.date = completionDate;
+    }
+
+    public Score(String user, int score, String difficulty, String completionDate) {
+        this.user = user;
+        this.score = score;
+        this.difficulty = difficulty;
         this.date = completionDate;
     }
 
@@ -22,29 +30,29 @@ public class Score implements Serializable, Comparable<Score> {
         return score;
     }
 
-    public String getUser(){
+    public String getUser() {
         return user;
     }
 
-    public int getPuzzleSize(){
+    public int getPuzzleSize() {
         return puzzleSize;
     }
 
-    public String getDate(){
+    public String getDate() {
         return this.date;
     }
 
-    public int compareTo(Score other){
-        if(this.score < other.getScore()){
-            return -1;
-        }else if(this.score > other.getScore()){
-            return 1;
-        }else{
-            return 0;
-        }
+    public String getDifficulty() {
+        return this.difficulty;
     }
 
-    public String toString(){
-        return puzzleSize + "\t" + user + "\t" + score;
+    public int compareTo(Score other) {
+        if (this.score < other.getScore()) {
+            return -1;
+        } else if (this.score > other.getScore()) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 }

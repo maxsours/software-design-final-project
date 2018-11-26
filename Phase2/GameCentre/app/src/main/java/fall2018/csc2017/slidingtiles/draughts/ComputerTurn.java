@@ -16,6 +16,7 @@ public class ComputerTurn extends AsyncTask<String, String, String>
     private String myDifficulty;
     private Move selectedMove;
     private boolean allowAnyMove;
+    private boolean wonStatus ;
 
     public ComputerTurn(MyCheckersActivity activity,
                         CheckersGame game,
@@ -29,6 +30,7 @@ public class ComputerTurn extends AsyncTask<String, String, String>
         myDifficulty = difficulty;
         allowAnyMove = allowAny;
         selectedMove = null;
+        wonStatus = false;
     }
 
     protected int minimax(Board base, int turn, int depth)
@@ -75,7 +77,6 @@ public class ComputerTurn extends AsyncTask<String, String, String>
 
         ArrayList<Move> bestMoves = new ArrayList<>();
         int bestScore = 1000;
-
         for (Move move : moves) {
             Board moveBoard = new Board(data);
             moveBoard.makeMove(move);
@@ -88,7 +89,6 @@ public class ComputerTurn extends AsyncTask<String, String, String>
                 bestMoves.add(move);
             }
         }
-
         int randomIndex = (int)(Math.random() * bestMoves.size());
         Move randomMove = bestMoves.get(randomIndex);
         return randomMove;
@@ -172,6 +172,9 @@ public class ComputerTurn extends AsyncTask<String, String, String>
             } else {
                 // player wins
                 myActivity.statusText.setText("You won!");
+                wonStatus = true;
+
+                myActivity.setWinStatus(true, myDifficulty);
             }
         }
     }
