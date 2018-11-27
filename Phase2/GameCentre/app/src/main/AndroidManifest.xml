@@ -18,7 +18,6 @@
         <activity
             android:name=".GameModeSelection"
             android:theme="@style/AppTheme.TranslucentCloseOnTouch" />
-        <activity android:name=".UserSummaryActivity" />
         <activity android:name=".ActualStartingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

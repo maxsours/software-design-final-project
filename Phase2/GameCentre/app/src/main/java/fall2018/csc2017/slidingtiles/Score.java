@@ -26,6 +26,12 @@ public class Score implements Serializable, Comparable<Score> {
         this.date = completionDate;
     }
 
+    public Score(String user, int score, String completionDate){
+        this.user = user;
+        this.score = score;
+        this.date = completionDate;
+    }
+
     public int getScore() {
         return score;
     }
