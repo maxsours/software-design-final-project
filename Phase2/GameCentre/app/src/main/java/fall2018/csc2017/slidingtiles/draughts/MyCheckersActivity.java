@@ -208,7 +208,6 @@ public class MyCheckersActivity extends AppCompatActivity {
             stepTaken++;
             if(stepTaken == 1){
                 startTime = System.currentTimeMillis();
-                System.out.println("Startime hereeeeeeeeeeeeee is " + startTime);
             }
 
         }

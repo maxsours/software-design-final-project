@@ -71,10 +71,11 @@ public class MainView extends View {
     private int eYAll;
     private int titleWidthHighScore;
     private int titleWidthScore;
+    private boolean hasLost;
 
     public MainView(Context context) {
         super(context);
-
+        this.hasLost = false;
         Resources resources = context.getResources();
         //Loading resources
         game = new MainGame(context, this);
@@ -419,6 +420,8 @@ public class MainView extends View {
             paint.setTextSize(gameOverTextSize);
             paint.setTextAlign(Paint.Align.CENTER);
             canvas.drawText(getResources().getString(R.string.game_over), middleX, middleY - centerText(), paint);
+            hasLost = true;
+            System.out.println("hasLost is " + hasLost);
         }
     }
 
@@ -566,4 +569,7 @@ public class MainView extends View {
         return (int) ((paint.descent() + paint.ascent()) / 2);
     }
 
+    public boolean getHasLost(){
+        return this.hasLost;
+    }
 }

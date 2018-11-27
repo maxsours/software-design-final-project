@@ -101,15 +101,14 @@ public class ScoreActivity extends AppCompatActivity {
                     return true;
 
                 case R.id.navigation_notifications:
-                    path = lastUser + "_blackjack_score_save_file.ser";
+                    path = lastUser + "_2048_score_save_file.ser";
                     scoreFileExist = false;
                     loadScoreFromFile(path);
                     mTextMessage.setTextSize(15);
                     if(!scoreFileExist){
-                        scoreTextMessage.setText("No record found for Checkers");
+                        scoreTextMessage.setText("No record found for 2048");
                     }else{
-                        StringBuilder text = new StringBuilder();
-
+                        StringBuilder text = append2048Score();
                         scoreTextMessage.setText(text);
                     }
                     return true;
@@ -211,6 +210,23 @@ public class ScoreActivity extends AppCompatActivity {
             }
         }
         System.out.println(scoreDetails);
+        return scoreDetails;
+    }
+
+    public StringBuilder append2048Score(){
+        StringBuilder scoreDetails = new StringBuilder();
+        for(Score score : scoreList){
+            if(score.getScore() != 0){
+                scoreDetails.append(score.getUser());
+                scoreDetails.append("\t\t\t\t");
+
+                scoreDetails.append(Integer.toString(score.getScore()));
+                scoreDetails.append("\t\t\t\t");
+
+                scoreDetails.append(score.getDate());
+                scoreDetails.append("\n");
+            }
+        }
         return scoreDetails;
     }
 

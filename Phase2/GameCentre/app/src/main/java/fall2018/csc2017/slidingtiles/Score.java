@@ -62,7 +62,4 @@ public class Score implements Serializable, Comparable<Score> {
         }
     }
 
-    public String toString(){
-        return puzzleSize + "\t" + user + "\t" + score;
-    }
 }
