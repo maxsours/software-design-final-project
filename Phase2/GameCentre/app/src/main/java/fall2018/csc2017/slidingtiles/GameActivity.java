@@ -41,9 +41,9 @@ public class GameActivity extends AppCompatActivity implements Observer {
 
     private Score score;
     /**
-     * every score save file will titled "(username)_score_save_file.ser"
+     * every score save file will titled "(username)_slidingtiles_score_save_file.ser"
      */
-    private final String SCORE_FILENAME_TEMPLATE = "_score_save_file.ser";
+    private final String SCORE_FILENAME_TEMPLATE = "_slidingtiles_score_save_file.ser";
 
     /**
      * The name of the file score is saved in.

@@ -8,15 +8,27 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 
+import fall2018.csc2017.slidingtiles.GameActivity;
 import fall2018.csc2017.slidingtiles.R;
+import fall2018.csc2017.slidingtiles.Score;
+import fall2018.csc2017.slidingtiles.User;
 import fall2018.csc2017.slidingtiles.draughts.game.Board;
 import fall2018.csc2017.slidingtiles.draughts.game.CheckersGame;
 import fall2018.csc2017.slidingtiles.draughts.game.Move;
@@ -31,9 +43,18 @@ public class MyCheckersActivity extends AppCompatActivity {
 
     private String prefDifficulty;
     private boolean prefAllowAnyMove;
+    private ArrayList <Score> scoreList = new ArrayList<>(20);
+    private Score score;
+    private User activeUser;
+    private ArrayList<User> users = new ArrayList<>(0);
+    private int stepTaken = 0;
+    private double startTime;
+    private boolean winStatus = false;
 
     private static final String DIFFICULTY = "pref_difficulty";
     private static final String ANY_MOVE = "pref_any_move";
+    private final String SCORE_FILENAME_TEMPLATE = "_checkers_score_save_file.ser";
+    private static String checkersScoreFile ;
 
     @Override
     protected void onCreate(Bundle saved)
@@ -45,6 +66,7 @@ public class MyCheckersActivity extends AppCompatActivity {
         //
         ////PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         //
+        activeUser = getUserFromUsername(getIntent().getStringExtra("activeUser"));
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.registerOnSharedPreferenceChangeListener(preferencesChangeListener);
         prefDifficulty = sharedPreferences.getString(DIFFICULTY, "Easy");
@@ -162,7 +184,6 @@ public class MyCheckersActivity extends AppCompatActivity {
 
         } else if (turn == CheckersGame.BLACK) {
             statusText.setText("Black's (player's) turn.");
-
             // prep for human player turn
             ArrayList<Piece> selectablePieces = new ArrayList<>();
             Move moves[] = gamelogic.getMoves();
@@ -183,6 +204,13 @@ public class MyCheckersActivity extends AppCompatActivity {
             if (selectablePieces.size() == 0) {
                 statusText.setText("You lost!");
             }
+
+            stepTaken++;
+            if(stepTaken == 1){
+                startTime = System.currentTimeMillis();
+                System.out.println("Startime hereeeeeeeeeeeeee is " + startTime);
+            }
+
         }
 
         checkersView.refresh();
@@ -296,4 +324,254 @@ public class MyCheckersActivity extends AppCompatActivity {
                     prepTurn();
                 }
             };
+
+    public void saveScoreToFile(User activeUser, int finalScore, String difficulty){
+        try {
+            String username;
+            if(activeUser == null){
+                username = "Guest";
+            }else{
+                username = activeUser.getUsername();
+            }
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            Date date = new Date();
+            String dateToday = formatter.format(date);
+            checkersScoreFile = username + SCORE_FILENAME_TEMPLATE;
+            score = new Score(username, finalScore, difficulty, dateToday);
+            setDefaultValueForArray();
+            loadScoreFromFile(checkersScoreFile);
+            compareScore(score, difficulty, username);
+            ObjectOutputStream outputStream = new ObjectOutputStream(
+                    this.openFileOutput(checkersScoreFile, MODE_PRIVATE));
+            outputStream.writeObject(scoreList);
+            outputStream.close();
+            saveLastUser(username);
+        } catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
+        }
+    }
+
+    /**
+     * get the list of score
+     *
+     * @param fileName name of the file
+     */
+    public void loadScoreFromFile(String fileName){
+        try {
+            InputStream inputStream = this.openFileInput(fileName);
+            if (inputStream != null) {
+                ObjectInputStream input = new ObjectInputStream(inputStream);
+                scoreList = (ArrayList<Score>)input.readObject();
+                inputStream.close();
+            }
+        } catch (FileNotFoundException e) {
+            Log.e("loadScoreFromFile", "File not found: " + e.toString());
+        } catch (IOException e) {
+            Log.e("loadScoreFromFile", "Can not read file: " + e.toString());
+        } catch (ClassNotFoundException e) {
+            Log.e("loadScoreFromFile", "File contained unexpected data type: " + e.toString());
+        }
+    }
+
+    private int calculateFinalScore(String difficulty, double endTime, double startTime){
+        int finalScore, difficultyScore;
+        double timeTaken;
+
+        if(difficulty.equals("Easy")){
+            difficultyScore = 1;
+        }else if (difficulty.equals("Medium")){
+            difficultyScore = 2;
+        }else if (difficulty.equals("Hard")){
+            difficultyScore = 3;
+        }else{
+            difficultyScore = 4;
+        }
+
+        timeTaken = ( endTime - startTime)/600000;
+        finalScore = (int) Math.ceil((100000 * difficultyScore)/timeTaken);
+
+        System.out.println("timeTaken " + timeTaken);
+        System.out.println("finalScore " + finalScore);
+
+        return finalScore;
+    }
+
+    /**
+     * Given a username, return the user
+     * @param username the username
+     * @return the user with the input username
+     */
+    public User getUserFromUsername(String username){
+        if (username != null) {
+            for (User user : users) {
+                if (user.getUsername().equals(username)) {
+                    return user;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Save the currently active user.
+     *
+     * @param username the username of the user.
+     */
+    public void saveLastUser(String username){
+        try {
+            ObjectOutputStream outputStream = new ObjectOutputStream(
+                    this.openFileOutput(GameActivity.LAST_USER_FILE, MODE_PRIVATE));
+            outputStream.writeObject(username);
+            outputStream.close();
+            System.out.println("last User saved");
+        } catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
+        }
+    }
+
+    /**
+     * sort all the scores according to its puzzle size and score
+     *
+     * @param other the other score to add.
+     */
+    private void compareScore(Score other, String difficulty, String username){
+        ArrayList<Score> temp = new ArrayList<>();
+        int tempCounter;
+        switch(difficulty){
+            case "Easy":
+                for(int  counter = 0; counter < 5; counter ++){
+                    temp.add(scoreList.get(counter));
+                }
+                temp.add(other);
+                Collections.sort(temp);
+                tempCounter = searchNonZeroIndex(temp);
+                for(int counter = 0; counter < 5; counter ++){
+                    if(tempCounter < temp.size()){
+                        scoreList.set(counter, temp.get(tempCounter));
+                        tempCounter++;
+                    }else{
+                        scoreList.set(counter, new Score(username,0, "Easy", ""));
+                    }
+                }
+                break;
+
+            case "Medium":
+                for(int  counter = 5; counter < 10; counter ++){
+                    temp.add(scoreList.get(counter));
+                }
+                temp.add(other);
+                Collections.sort(temp);
+                tempCounter = searchNonZeroIndex(temp);
+                for(int counter = 5; counter < 10; counter ++){
+                    if(tempCounter < temp.size()){
+                        scoreList.set(counter, temp.get(tempCounter));
+                        tempCounter++;
+                    }else{
+                        scoreList.set(counter, new Score(username,0,"Medium", ""));
+                    }
+                }
+                break;
+
+            case "Hard":
+                for(int  counter = 10; counter < 15; counter ++){
+                    temp.add(scoreList.get(counter));
+                }
+                temp.add(other);
+                Collections.sort(temp);
+                tempCounter = searchNonZeroIndex(temp);
+                for(int counter = 10; counter < 15; counter ++){
+                    if(tempCounter < temp.size()){
+                        scoreList.set(counter, temp.get(tempCounter));
+                        tempCounter++;
+                    }else{
+                        scoreList.set(counter, new Score(username,0,"Hard", ""));
+                    }
+                }
+                break;
+
+            case "Very Hard":
+                for(int  counter = 15; counter < 20; counter ++){
+                    temp.add(scoreList.get(counter));
+                }
+                temp.add(other);
+                Collections.sort(temp);
+                tempCounter = searchNonZeroIndex(temp);
+                for(int counter = 15; counter < 20; counter ++){
+                    if(tempCounter < temp.size()){
+                        scoreList.set(counter, temp.get(tempCounter));
+                        tempCounter++;
+                    }else{
+                        scoreList.set(counter, new Score(username,0,"Very Hard", ""));
+                    }
+                }
+                break;
+        }
+    }
+
+    /**
+     * determine the index in the scoreList where the score is != 0
+     * @param temp the scorelist.
+     * @return the index where score is 0.
+     */
+    public int searchNonZeroIndex(ArrayList<Score> temp){
+        int index = 0;
+
+        while(index < temp.size()){
+            if(temp.get(index).getScore() != 0){
+                break;
+            }
+            index ++;
+        }
+        System.out.println("index is " + index);
+        return index;
+    }
+
+    /**
+     * initialize the scoreList if the user is new to the game
+     *
+     * from index 0 to 4, it stores the scores of complexity of 3 x 3
+     * from index 5 to 9, it stores the scores of complexity of 4 x 4
+     * from index 10 to 14, it stores the scores of complexity of 5 x 5
+     *
+     */
+    public void setDefaultValueForArray(){
+        String username;
+        if(activeUser == null){
+            username = "Guest";
+        }else{
+            username = activeUser.getUsername();
+        }
+        String difficulty;
+        for (int counter = 0; counter < 20; counter ++){
+            if(counter < 5){
+                difficulty = "Easy";
+            }else if(counter >= 5 && counter < 10){
+                difficulty = "Medium";
+            }else if (counter >=10 && counter < 15){
+                difficulty = "Hard";
+            }else{
+                difficulty = "Very Hard";
+            }
+            Score score = new Score (username,0, difficulty, "");
+            scoreList.add(score);
+        }
+    }
+
+    public void setWinStatus(boolean status, String difficulty){
+        winStatus = status;
+        System.out.println("winStatus is " + winStatus);
+        if(winStatus == true){
+            System.out.println("Inside the method");
+            double endTime = System.currentTimeMillis();
+            int finalScore = calculateFinalScore(difficulty, endTime, startTime);
+
+            if (activeUser == null){
+                saveLastUser("Guest");
+            }else{
+                saveLastUser(activeUser.getUsername());
+            }
+            saveScoreToFile(activeUser, finalScore,difficulty );
+        }
+    }
+
 }

@@ -33,11 +33,11 @@ public class BoardAndTileTest {
     }
 
     /**
-     * Make a solved Board.
+     * Make a solved 4x4 Board.
      */
     private void setUpCorrect() {
         List<Tile> tiles = makeTiles();
-        Board board = new Board(tiles);
+        Board board = new Board(tiles, 3);
         boardManager = new BoardManager(board);
     }
 
@@ -92,8 +92,51 @@ public class BoardAndTileTest {
     public void testIsValidTap() {
         setUpCorrect();
         assertEquals(true, boardManager.isValidTap(11));
-        assertEquals(true, boardManager.isValidTap(15));
+        assertEquals(false, boardManager.isValidTap(15));
         assertEquals(false, boardManager.isValidTap(10));
+    }
+
+    /**
+     * Test whether isSolvable() works.
+     */
+    @Test
+    public void testIsSolvable() {
+        setUpCorrect();
+        assertEquals(true, boardManager.isSolvable());
+        boardManager.getBoard().swapTiles(3, 3, 2, 2);
+        assertEquals(false, boardManager.isSolvable());
+        boardManager.fixUnsolvableBoard();
+        assertEquals(true, boardManager.isSolvable());
+    }
+
+    /**
+     * Test whether a 5x5 board is created correctly
+     */
+    @Test
+    public void test5x5(){
+        Board.NUM_ROWS = 5;
+        Board.NUM_COLS = 5;
+        List<Tile> tiles = makeTiles();
+        Board board = new Board(tiles, 3);
+        boardManager = new BoardManager(board);
+        assertEquals(25, boardManager.getTiles().size());
+        Board.NUM_ROWS = 4;
+        Board.NUM_COLS = 4;
+    }
+
+    /**
+     * Test whether a 3x3 board is created correctly
+     */
+    @Test
+    public void test3x3(){
+        Board.NUM_ROWS = 3;
+        Board.NUM_COLS = 3;
+        List<Tile> tiles = makeTiles();
+        Board board = new Board(tiles, 3);
+        boardManager = new BoardManager(board);
+        assertEquals(9, boardManager.getTiles().size());
+        Board.NUM_ROWS = 4;
+        Board.NUM_COLS = 4;
     }
 }
 

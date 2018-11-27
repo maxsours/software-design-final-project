@@ -13,6 +13,9 @@ public class CheckersGame {
     private int winner;
     private boolean allowAnyMove;
 
+    private double startTime;
+    private int totalMoves = 0;
+
     // checkers game holds board state and current turn
     public CheckersGame(boolean anyMove) {
         gameBoard = new Board(this);
@@ -63,6 +66,10 @@ public class CheckersGame {
     // make a move
     public void makeMove(Move choice) {
         gameBoard.makeMove(choice);
+        totalMoves++;
+        if(totalMoves == 1){
+            startTime = System.currentTimeMillis();
+        }
         advanceTurn();
     }
 
@@ -73,5 +80,13 @@ public class CheckersGame {
         } else {
             turn = CheckersGame.RED;
         }
+    }
+
+    public double getStartTime(){
+        return startTime;
+    }
+
+    public int getTotalMoves() {
+        return totalMoves;
     }
 }
