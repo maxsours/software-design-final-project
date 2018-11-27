@@ -45,6 +45,7 @@ public class ActualStartingActivity extends AppCompatActivity {
         addCreateAccountListener();
         addSlidingTilesButtonListener();
         addDraughtsButtonListener();
+        add2048sButtonListener();
         addHighScoreButtonListener();
     }
 
@@ -301,6 +302,34 @@ public class ActualStartingActivity extends AppCompatActivity {
     public void openDraughts () {
         Intent intent = new Intent(this, fall2018.csc2017.slidingtiles.
                 draughts.MyCheckersActivity.class);
+        startActivity(intent);
+    }
+
+    private Button button2048;
+
+    /**
+     * Activate draughts button.
+     */
+    private void add2048sButtonListener(){
+        button2048 = findViewById(R.id.button2048);
+
+        button2048.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                open2048();
+                if(activeUser == null){
+                    saveLastUser("Guest");
+                }
+            }
+        });
+    }
+
+    /**
+     * Transition to draughts game.
+     */
+    public void open2048 () {
+        Intent intent = new Intent(this, fall2018.csc2017.slidingtiles.
+                Game2048.MainActivity.class);
         startActivity(intent);
     }
 

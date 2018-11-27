@@ -28,6 +28,8 @@
         </activity>
         <activity android:name=".draughts.SettingsActivity" />
         <activity android:name=".draughts.MyCheckersActivity" />
+        <activity android:name=".Game2048.MainActivity" />
+
     </application>
 
 </manifest>
