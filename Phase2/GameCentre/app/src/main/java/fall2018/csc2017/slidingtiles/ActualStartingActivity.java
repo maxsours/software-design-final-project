@@ -304,11 +304,13 @@ public class ActualStartingActivity extends AppCompatActivity {
                 draughts.MyCheckersActivity.class);
         startActivity(intent);
     }
-
+    /**
+     * Button for draughts game on Game Centre.
+     */
     private Button button2048;
 
     /**
-     * Activate draughts button.
+     * Activate 2048 button.
      */
     private void add2048sButtonListener(){
         button2048 = findViewById(R.id.button2048);
@@ -325,7 +327,7 @@ public class ActualStartingActivity extends AppCompatActivity {
     }
 
     /**
-     * Transition to draughts game.
+     * Transition to 2048 game.
      */
     public void open2048 () {
         Intent intent = new Intent(this, fall2018.csc2017.slidingtiles.
