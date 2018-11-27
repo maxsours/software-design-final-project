@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Created by Greg on 8/6/2017.
  */ // data for complete board state
-public class Board {
+public class CheckerBoard {
     //private CheckersGame checkersGame;
     private Piece board[][];
 
@@ -38,7 +38,7 @@ public class Board {
 
 
     // create new board
-    public Board(CheckersGame checkersGame) {
+    public CheckerBoard(CheckersGame checkersGame) {
         //this.checkersGame = checkersGame;
         board = new Piece[8][8];
         for (int x = 0; x < 8; x++) {
@@ -55,7 +55,7 @@ public class Board {
     }
 
     // create from existing positions
-    public Board(int[][] positions) {
+    public CheckerBoard(int[][] positions) {
         //this.checkersGame = checkersGame;
         board = new Piece[8][8];
         for (int x = 0; x < 8; x++) {

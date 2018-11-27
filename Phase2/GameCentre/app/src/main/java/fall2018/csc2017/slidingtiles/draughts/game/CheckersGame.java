@@ -7,7 +7,7 @@ public class CheckersGame {
     public static final int KINGED = 3;
 
     // checkers game state
-    private Board gameBoard;
+    private CheckerBoard gameBoard;
     private int turn;
     private boolean over;
     private int winner;
@@ -18,7 +18,7 @@ public class CheckersGame {
 
     // checkers game holds board state and current turn
     public CheckersGame(boolean anyMove) {
-        gameBoard = new Board(this);
+        gameBoard = new CheckerBoard(this);
         turn = CheckersGame.BLACK;
         over = false;
         winner = CheckersGame.NONE;
@@ -26,7 +26,7 @@ public class CheckersGame {
     }
 
     public void restart() {
-        gameBoard = new Board(this);
+        gameBoard = new CheckerBoard(this);
         turn = CheckersGame.BLACK;
         over = false;
         winner = CheckersGame.NONE;
@@ -42,7 +42,7 @@ public class CheckersGame {
     }
 
     // get the board data
-    public Board getBoard() {
+    public CheckerBoard getBoard() {
         return this.gameBoard;
     }
 

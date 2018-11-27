@@ -20,7 +20,7 @@ public class Board extends Observable implements Serializable, Iterable<Tile> {
     /**
      * keep track of the total moves while user is playing the puzzle
      */
-    private int totalMove=0;
+    private int totalMove = 0;
 
     /**
      * The number of rows.
@@ -171,6 +171,10 @@ public class Board extends Observable implements Serializable, Iterable<Tile> {
         return this.totalMove;
     }
 
+    /**
+     * Returns a string representation of this board.
+     * @return a string representation of this board
+     */
     @Override
     public String toString() {
         return "Board{" +
@@ -178,6 +182,10 @@ public class Board extends Observable implements Serializable, Iterable<Tile> {
                 '}';
     }
 
+    /**
+     * Return an iterator for this that iterates of the tiles. Method used to implement iterable.
+     * @return an iterator representation of this
+     */
     @NonNull
     @Override
     public Iterator<Tile> iterator() {
