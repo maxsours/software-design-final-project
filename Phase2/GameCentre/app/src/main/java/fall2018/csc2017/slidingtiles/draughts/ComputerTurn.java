@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 
 import java.util.ArrayList;
 
-import fall2018.csc2017.slidingtiles.draughts.game.Board;
+import fall2018.csc2017.slidingtiles.draughts.game.CheckerBoard;
 import fall2018.csc2017.slidingtiles.draughts.game.CheckersGame;
 import fall2018.csc2017.slidingtiles.draughts.game.Move;
 import fall2018.csc2017.slidingtiles.draughts.game.Piece;
@@ -33,7 +33,7 @@ public class ComputerTurn extends AsyncTask<String, String, String>
         wonStatus = false;
     }
 
-    protected int minimax(Board base, int turn, int depth)
+    protected int minimax(CheckerBoard base, int turn, int depth)
     {
         int oppositeTurn = (turn == CheckersGame.RED ? CheckersGame.BLACK : CheckersGame.RED);
         Move[] baseMoves = base.getMoves(turn, allowAnyMove);
@@ -43,7 +43,7 @@ public class ComputerTurn extends AsyncTask<String, String, String>
         int[][] data = base.saveBoard();
         for (Move move : baseMoves)
         {
-            Board specificBoard = new Board(data);
+            CheckerBoard specificBoard = new CheckerBoard(data);
             specificBoard.makeMove(move);
 
             int moveScore;
@@ -70,7 +70,7 @@ public class ComputerTurn extends AsyncTask<String, String, String>
 
     protected Move Minimax(int depth)
     {
-        Board realBoard = myGame.getBoard();
+        CheckerBoard realBoard = myGame.getBoard();
         Move moves[] = myGame.getMoves();
 
         int[][] data = realBoard.saveBoard();
@@ -78,7 +78,7 @@ public class ComputerTurn extends AsyncTask<String, String, String>
         ArrayList<Move> bestMoves = new ArrayList<>();
         int bestScore = 1000;
         for (Move move : moves) {
-            Board moveBoard = new Board(data);
+            CheckerBoard moveBoard = new CheckerBoard(data);
             moveBoard.makeMove(move);
             int score = minimax(moveBoard, CheckersGame.BLACK, depth);
             if (score < bestScore) {

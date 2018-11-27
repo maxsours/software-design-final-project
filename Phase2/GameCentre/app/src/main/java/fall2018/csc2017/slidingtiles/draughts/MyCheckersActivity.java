@@ -29,7 +29,7 @@ import fall2018.csc2017.slidingtiles.GameActivity;
 import fall2018.csc2017.slidingtiles.R;
 import fall2018.csc2017.slidingtiles.Score;
 import fall2018.csc2017.slidingtiles.User;
-import fall2018.csc2017.slidingtiles.draughts.game.Board;
+import fall2018.csc2017.slidingtiles.draughts.game.CheckerBoard;
 import fall2018.csc2017.slidingtiles.draughts.game.CheckersGame;
 import fall2018.csc2017.slidingtiles.draughts.game.Move;
 import fall2018.csc2017.slidingtiles.draughts.game.Piece;
@@ -164,7 +164,7 @@ public class MyCheckersActivity extends AppCompatActivity {
 
     // prepare a human or computer turn
     public void prepTurn() {
-        Board board = gamelogic.getBoard();
+        CheckerBoard board = gamelogic.getBoard();
 
         selectedPiece = null;
         selectedPosition = null;
