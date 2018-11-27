@@ -10,8 +10,8 @@ import android.widget.TableRow;
 import android.util.DisplayMetrics;
 
 import fall2018.csc2017.slidingtiles.R;
+import fall2018.csc2017.slidingtiles.draughts.game.CheckerBoard;
 import fall2018.csc2017.slidingtiles.draughts.game.CheckersGame;
-import fall2018.csc2017.slidingtiles.draughts.game.Board;
 import fall2018.csc2017.slidingtiles.draughts.game.Piece;
 import fall2018.csc2017.slidingtiles.draughts.game.Position;
 
@@ -38,7 +38,7 @@ public class CheckersLayout extends TableLayout {
     };
 
     public void refresh() {
-        Board myBoard = myGame.getBoard();
+        CheckerBoard myBoard = myGame.getBoard();
         for (int x = 0; x < 8; x++) {
             for (int y = 0; y < 8; y++)
                 if (myBoard.isGameSquare(x, y)) {
@@ -95,7 +95,7 @@ public class CheckersLayout extends TableLayout {
         LayoutParams params;
 
         myGame = game;
-        Board myBoard = myGame.getBoard();
+        CheckerBoard myBoard = myGame.getBoard();
 
         params = new LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
