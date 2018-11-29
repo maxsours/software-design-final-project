@@ -2,20 +2,66 @@ package fall2018.csc2017.slidingtiles.draughts.game;
 
 import java.io.Serializable;
 
+/**
+ * The data for a checker board game.
+ * Adapted on 2018/11/15 from an openly available applet by Greg Tour:
+ * https://github.com/gregtour/CheckersAndroid
+ */
 public class CheckersGame implements Serializable {
+
+    /**
+     * A value representing an non-existent piece.
+     */
     public static final int NONE = 0;
+
+    /**
+     * A value representing a black piece.
+     */
     public static final int BLACK = 1;
+
+    /**
+     * A value representing a red piece.
+     */
     public static final int RED = 2;
+
+    /**
+     * A value representing an king piece.
+     */
     public static final int KINGED = 3;
 
-    // checkers game state
+    /**
+     * A checker game's board.
+     */
     private CheckerBoard gameBoard;
+
+    /**
+     * A checker game's number of turns.
+     */
     private int turn;
+
+    /**
+     * Whether a checker game is over or not.
+     */
     private boolean over;
+
+    /**
+     * A checker game's winner.
+     */
     private int winner;
+
+    /**
+     * Whether a checker game allows for any move to occur.
+     */
     private boolean allowAnyMove;
 
+    /**
+     * The start time for a checkers game.
+     */
     private double startTime;
+
+    /**
+     * The total number of moves played by the user in the checkers game.
+     */
     private int totalMoves = 0;
 
     // checkers game holds board state and current turn
