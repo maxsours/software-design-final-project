@@ -343,6 +343,11 @@ public class CheckerBoard implements Serializable {
         }
     }
 
+    /**
+     * Returns a score value for a player in the checker game.
+     *
+     * @return a score value for a player in the checker game.
+     */
     public int pseudoScore() {
         int score = 0;
         int blackPieces = 0;
