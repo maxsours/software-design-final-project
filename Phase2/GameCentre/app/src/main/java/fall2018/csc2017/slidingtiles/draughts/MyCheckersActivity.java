@@ -36,7 +36,10 @@ import fall2018.csc2017.slidingtiles.draughts.game.Move;
 import fall2018.csc2017.slidingtiles.draughts.game.Piece;
 import fall2018.csc2017.slidingtiles.draughts.game.Position;
 
-
+/**
+ * Adapted on 2018/11/15 from an openly available applet by Greg Tour:
+ * https://github.com/gregtour/CheckersAndroid
+ */
 public class MyCheckersActivity extends AppCompatActivity {
     private CheckersGame gamelogic;
     private CheckersLayout checkersView;

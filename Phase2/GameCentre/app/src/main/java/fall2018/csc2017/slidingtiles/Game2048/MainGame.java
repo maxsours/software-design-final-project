@@ -8,6 +8,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+
+/*
+ * Adapted from a open source project from Jerry Jiang:
+ * https://github.com/tpcstld/2048/blob/master/2048/2048/src/main/java/com/tpcstld/twozerogame/MainGame.java
+ */
+
+
 public class MainGame {
     /**
      * Integer ids for animations

@@ -1,7 +1,10 @@
 package fall2018.csc2017.slidingtiles.draughts.game;
 
 import java.io.Serializable;
-
+/**
+ * Adapted on 2018/11/15 from an openly available applet by Greg Tour:
+ * https://github.com/gregtour/CheckersAndroid
+ */
 /**
  * Created by Greg on 8/6/2017.
  */ // x y coordinate
