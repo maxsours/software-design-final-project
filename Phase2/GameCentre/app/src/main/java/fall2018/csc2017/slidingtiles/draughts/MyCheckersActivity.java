@@ -47,7 +47,7 @@ public class MyCheckersActivity extends AppCompatActivity {
     private ArrayList <Score> scoreList = new ArrayList<>(20);
     private Score score;
     private User activeUser;
-    private String currentUser;
+    private String currentUser, checkersScoreFile;
     private ArrayList<User> users = new ArrayList<>(0);
     private int stepTaken = 0;
     private double startTime;
@@ -57,7 +57,6 @@ public class MyCheckersActivity extends AppCompatActivity {
     private static final String ANY_MOVE = "pref_any_move";
     private final String SCORE_FILENAME_TEMPLATE = "_checkers_score_save_file.ser";
     private final String CHECKERS_SAVE_FILE = "_checkers_save_file.ser";
-    private static String checkersScoreFile ;
 
     @Override
     protected void onCreate(Bundle saved)
@@ -558,7 +557,7 @@ public class MyCheckersActivity extends AppCompatActivity {
      * from index 0 to 4, it stores the scores of "easy"
      * from index 5 to 9, it stores the scores of "medium"
      * from index 10 to 14, it stores the scores of "hard"
-     * from index 10 to 14, it stores the scores of "very hard"
+     * from index 15 to 19, it stores the scores of "very hard"
      *
      */
     public void setDefaultValueForArray(){
