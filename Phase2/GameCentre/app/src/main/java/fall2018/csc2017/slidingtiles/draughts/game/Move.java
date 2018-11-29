@@ -64,7 +64,7 @@ public class Move implements Serializable {
     }
 
     /**
-     *
+     * Adds a position to move.
      *
      * @param pos a move's position
      */
@@ -72,27 +72,41 @@ public class Move implements Serializable {
         add(pos.x, pos.y);
     }
 
+    /**
+     * Adds the position associated with given coordinates to move.
+     *
+     * @param x a move's row position.
+     * @param y a move's column position.
+     */
     public void add(int x, int y) {
         Position prev = positions.get(positions.size() - 1);
         Position next = new Position(x, y);
         positions.add(next);
-        // check if move is a capture
         int dist = Math.abs(prev.x - x) + Math.abs(prev.y - y);
         if (dist > 2) {
             int cx = (prev.x + x) / 2;
             int cy = (prev.y + y) / 2;
             captures.add(new Position(cx, cy));
         }
-        // check if move is a king
         if (y == 0 || y == 7) {
             kings = true;
         }
     }
 
+    /**
+     * Returns the starting position for a move.
+     *
+     * @return the start position for a move.
+     */
     public Position start() {
         return positions.get(0);
     }
 
+    /**
+     * Returns the ending position for a move.
+     *
+     * @return the end position for a move.
+     */
     public Position end() {
         return positions.get(positions.size() - 1);
     }
