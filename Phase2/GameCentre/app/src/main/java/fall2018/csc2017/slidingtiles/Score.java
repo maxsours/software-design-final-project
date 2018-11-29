@@ -12,6 +12,7 @@ public class Score implements Serializable, Comparable<Score> {
     private String date;
     private String difficulty;
 
+    //constructor used by sliding tiles
     public Score (String user,int score, int puzzleSize,String completionDate){
         this.user = user;
         this.score = score;
@@ -19,6 +20,7 @@ public class Score implements Serializable, Comparable<Score> {
         this.date = completionDate;
     }
 
+    //constructor used by checkers
     public Score(String user, int score, String difficulty, String completionDate) {
         this.user = user;
         this.score = score;
@@ -26,6 +28,7 @@ public class Score implements Serializable, Comparable<Score> {
         this.date = completionDate;
     }
 
+    //constructor used by 2048
     public Score(String user, int score, String completionDate){
         this.user = user;
         this.score = score;

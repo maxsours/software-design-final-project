@@ -217,6 +217,7 @@ public class MyCheckersActivity extends AppCompatActivity {
                 statusText.setText("You lost!");
             }
 
+            //record the start time when the player made the first move
             stepTaken++;
             if(stepTaken == 1){
                 startTime = System.currentTimeMillis();
@@ -336,6 +337,12 @@ public class MyCheckersActivity extends AppCompatActivity {
                 }
             };
 
+    /**
+     * save the score into the file
+     *
+     * @param finalScore the calculated final score after the player wins
+     * @param difficulty the difficulty of AI the player decided to play with
+     */
     public void saveScoreToFile( int finalScore, String difficulty){
         try {
 
@@ -379,10 +386,21 @@ public class MyCheckersActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * calculate the final score by taking the ceiling function of the following formula:
+     * finalScore = (int) Math.ceil((100000 * difficultyScore)/timeTaken);
+     *
+     *
+     * @param difficulty of the game played
+     * @param endTime when does the player win the game
+     * @param startTime when does the player made the first move
+     * @return final score obtained by the player
+     */
     private int calculateFinalScore(String difficulty, double endTime, double startTime){
         int finalScore, difficultyScore;
         double timeTaken;
 
+        //the difficultyScore is assigned based on the difficulty chosen
         if(difficulty.equals("Easy")){
             difficultyScore = 1;
         }else if (difficulty.equals("Medium")){
@@ -394,7 +412,6 @@ public class MyCheckersActivity extends AppCompatActivity {
         }
 
         timeTaken = ( endTime - startTime)/600000;
-        System.out.println("timetaken is " + timeTaken);
         finalScore = (int) Math.ceil((100000 * difficultyScore)/timeTaken);
 
         return finalScore;
@@ -434,7 +451,7 @@ public class MyCheckersActivity extends AppCompatActivity {
     }
 
     /**
-     * sort all the scores according to its puzzle size and score
+     * sort all the scores according to its difficulty and score
      *
      * @param other the other score to add.
      */
@@ -538,9 +555,10 @@ public class MyCheckersActivity extends AppCompatActivity {
     /**
      * initialize the scoreList if the user is new to the game
      *
-     * from index 0 to 4, it stores the scores of complexity of 3 x 3
-     * from index 5 to 9, it stores the scores of complexity of 4 x 4
-     * from index 10 to 14, it stores the scores of complexity of 5 x 5
+     * from index 0 to 4, it stores the scores of "easy"
+     * from index 5 to 9, it stores the scores of "medium"
+     * from index 10 to 14, it stores the scores of "hard"
+     * from index 10 to 14, it stores the scores of "very hard"
      *
      */
     public void setDefaultValueForArray(){
@@ -561,6 +579,14 @@ public class MyCheckersActivity extends AppCompatActivity {
         }
     }
 
+
+    /**
+     * when the game is won by the player, the ComputerTurn class will call this method to save the user,
+     * score and the game progress
+     *
+     * @param status whether the player wins the game
+     * @param difficulty the difficulty chosen by the player
+     */
     public void setWinStatus(boolean status, String difficulty){
         winStatus = status;
         if(winStatus == true){
@@ -579,7 +605,7 @@ public class MyCheckersActivity extends AppCompatActivity {
     }
 
     /**
-     * Save the board manager to fileName.
+     * Save the CheckersGame object to fileName.
      *
      * @param fileName the name of the file
      */
@@ -595,7 +621,7 @@ public class MyCheckersActivity extends AppCompatActivity {
     }
 
     /**
-     * Load the board manager from fileName.
+     * Load the CheckersGame object from fileName.
      *
      * @param fileName the name of the file
      */
@@ -617,5 +643,4 @@ public class MyCheckersActivity extends AppCompatActivity {
             Log.e("login activity", "File contained unexpected data type: " + e.toString());
         }
     }
-
 }

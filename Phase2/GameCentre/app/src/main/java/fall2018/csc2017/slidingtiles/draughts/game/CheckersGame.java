@@ -84,11 +84,4 @@ public class CheckersGame implements Serializable {
         }
     }
 
-    public double getStartTime(){
-        return startTime;
-    }
-
-    public int getTotalMoves() {
-        return totalMoves;
-    }
 }
