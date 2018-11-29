@@ -5,6 +5,7 @@ import android.preference.PreferenceActivity;
 
 import fall2018.csc2017.slidingtiles.R;
 /**
+ * Extends PreferenceActivity.
  * Adapted on 2018/11/15 from an openly available applet by Greg Tour:
  * https://github.com/gregtour/CheckersAndroid
  */
