@@ -25,6 +25,18 @@ public class Grid {
     }
 
     /**
+     * Create a new Grid based on a 2-D array of tiles
+     * @param tiles 2-D array of tiles
+     */
+    public Grid(Tile[][] tiles){
+        field = tiles;
+        int sizeX = field.length;
+        int sizeY = field[0].length;
+        undoField = new Tile[sizeX][sizeY];
+        bufferField = new Tile[sizeX][sizeY];
+    }
+
+    /**
      * Return an available cell at random
      * @return an available cell chosen at random
      */
