@@ -100,11 +100,22 @@ public class CheckersGame implements Serializable {
         return turn;
     }
 
-    // get the board data
+    /**
+     * Returns the checker board's game data
+     *
+     * @return the checker board's game data
+     */
     public CheckerBoard getBoard() {
         return this.gameBoard;
     }
 
+    /**
+     * Returns the longest move possible for a piece.
+     *
+     * @param start the piece's start position.
+     * @param end the piece's end position.
+     * @return the longest move possible for a piece.
+     */
     public Move getLongestMove(Position start, Position end) {
         Move longest = null;
         Move moveset[] = getMoves();
@@ -118,11 +129,20 @@ public class CheckersGame implements Serializable {
         return longest;
     }
 
+    /**
+     * Returns the moves played in a checker's game.
+     *
+     * @return the moves played in a checker's game.
+     */
     public Move[] getMoves() {
         return gameBoard.getMoves(turn, allowAnyMove);
     }
 
-    // make a move
+    /**
+     * Makes a move on the checker's game.
+     *
+     * @param choice the chosen move to be played.
+     */
     public void makeMove(Move choice) {
         gameBoard.makeMove(choice);
         totalMoves++;
@@ -132,7 +152,9 @@ public class CheckersGame implements Serializable {
         advanceTurn();
     }
 
-    // switch turns
+    /**
+     * Switches turns when the current player's turn has finished.
+     */
     private void advanceTurn() {
         if (turn == CheckersGame.RED) {
             turn = CheckersGame.BLACK;
