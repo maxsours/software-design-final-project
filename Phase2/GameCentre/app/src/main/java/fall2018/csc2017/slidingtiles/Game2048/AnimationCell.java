@@ -1,5 +1,16 @@
 package fall2018.csc2017.slidingtiles.Game2048;
 
+
+
+
+
+/*
+ * Adapted from a open source project from Jerry Jiang:
+ * https://github.com/tpcstld/2048/blob/master/2048/2048/src/main/java/com/tpcstld/twozerogame/AnimationCell.java
+ */
+
+
+
 /**
  * An animated cell - store data here to be used by the bitmap
  */
