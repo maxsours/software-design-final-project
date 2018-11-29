@@ -23,6 +23,7 @@ import fall2018.csc2017.slidingtiles.User;
 
 public class MainActivity extends AppCompatActivity {
 
+    // String identifiers used for the savedInstanceState
     private static final String WIDTH = "width";
     private static final String HEIGHT = "height";
     private static final String SCORE = "score";
@@ -38,10 +39,16 @@ public class MainActivity extends AppCompatActivity {
 
     private MainView view;
 
+    /**
+     * List of users
+     */
     private ArrayList<User> users = new ArrayList<>(0);
+    /**
+     * List of scores
+     */
     private ArrayList<Score> scoreList = new ArrayList<>(5);
-    private String currentUser;
-    private User activeUser;
+    private String currentUser; // string denoting the current user ("Guest" if not logged in)
+    private User activeUser; // the active user
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,11 +101,17 @@ public class MainActivity extends AppCompatActivity {
         save();
     }
 
+    /**
+     * Save the game when paused
+     */
     protected void onPause() {
         super.onPause();
         save();
     }
 
+    /**
+     * Save the game
+     */
     private void save() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = settings.edit();
@@ -134,11 +147,17 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Load the game when resumed
+     */
     protected void onResume() {
         super.onResume();
         load();
     }
 
+    /**
+     * Load the game
+     */
     private void load() {
         //Stopping all animations
         view.game.aGrid.cancelAnimations();
@@ -186,6 +205,9 @@ public class MainActivity extends AppCompatActivity {
         return null;
     }
 
+    /**
+     * Save the score to the file
+     */
     public void saveScoreToFile(){
         try {
 
@@ -230,6 +252,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Set a default value for the score list
+     */
     public void setDefaultValueForArray(){
         for (int counter = 0; counter < 5; counter ++){
             Score score = new Score (currentUser,0, "");
