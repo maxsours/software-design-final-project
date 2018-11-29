@@ -23,6 +23,14 @@ public class ComputerTurn extends AsyncTask<String, String, String> implements S
     private boolean allowAnyMove;
     private boolean wonStatus ;
 
+    /**
+     * constructor for ComputerTurn
+     *
+     * @param activity the new/current MyCheckersActivity
+     * @param game the new/current CheckersGame
+     * @param difficulty the difficulty of the game
+     * @param allowAny
+     */
     public ComputerTurn(MyCheckersActivity activity,
                         CheckersGame game,
                         String difficulty,
@@ -38,6 +46,14 @@ public class ComputerTurn extends AsyncTask<String, String, String> implements S
         wonStatus = false;
     }
 
+    /**
+     *the algorithm for the the AI to play the checkers
+     *
+     * @param base the currently played CheckerBoard
+     * @param turn whether it is the AI's turn
+     * @param depth
+     * @return the Ai's decided move
+     */
     protected int minimax(CheckerBoard base, int turn, int depth)
     {
         int oppositeTurn = (turn == CheckersGame.RED ? CheckersGame.BLACK : CheckersGame.RED);
@@ -73,6 +89,11 @@ public class ComputerTurn extends AsyncTask<String, String, String> implements S
         return score;
     }
 
+    /**
+     * determine whether the AI should use the random moves
+     * @param depth
+     * @return the randomed moves
+     */
     protected Move Minimax(int depth)
     {
         CheckerBoard realBoard = myGame.getBoard();

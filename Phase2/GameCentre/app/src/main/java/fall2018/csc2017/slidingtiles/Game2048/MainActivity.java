@@ -99,6 +99,12 @@ public class MainActivity extends AppCompatActivity {
             view.game.move(1);
             return true;
         }
+
+//        if(view.getHasLost() == true){
+//            saveScoreToFile();
+//            view.setHasLost();
+//        }
+
         return super.onKeyDown(keyCode, event);
     }
 
@@ -152,6 +158,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(view.getHasLost() == true){
             saveScoreToFile();
+            view.setHasLost();
         }
     }
 
