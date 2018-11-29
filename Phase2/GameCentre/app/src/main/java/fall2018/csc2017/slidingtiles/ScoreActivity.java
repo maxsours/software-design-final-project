@@ -186,7 +186,7 @@ public class ScoreActivity extends AppCompatActivity {
     }
 
     /**
-     * Append the scores in proper format before displaying them on the activity
+     * Append the scores for sliding tiles in proper format before displaying them on the activity
      *
      * @param start the beginning of the score section we want to append score to.
      * @param end the end of the score section we want to append score to.
@@ -207,6 +207,13 @@ public class ScoreActivity extends AppCompatActivity {
         return scoreDetails;
     }
 
+    /**
+     * Append the scores for checkers in proper format before displaying them on the activity
+     *
+     * @param start the beginning of the score section we want to append score to.
+     * @param end the end of the score section we want to append score to.
+     * @return the scores that need to be displayed on the app
+     */
     public StringBuilder appendCheckerScore(int start, int end){
         StringBuilder scoreDetails = new StringBuilder();
 
@@ -225,6 +232,11 @@ public class ScoreActivity extends AppCompatActivity {
         return scoreDetails;
     }
 
+    /**
+     * Append the scores for 2048 in proper format before displaying them on the activity
+     *
+     * @return the scores that need to be displayed on the app
+     */
     public StringBuilder append2048Score(){
         StringBuilder scoreDetails = new StringBuilder();
 
