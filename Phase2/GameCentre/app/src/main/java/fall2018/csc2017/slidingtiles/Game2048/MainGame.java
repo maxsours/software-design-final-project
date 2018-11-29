@@ -9,7 +9,9 @@ import java.util.Collections;
 import java.util.List;
 
 public class MainGame {
-
+    /**
+     * Integer ids for animations
+     */
     public static final int SPAWN_ANIMATION = -1;
     public static final int MOVE_ANIMATION = 0;
     public static final int MERGE_ANIMATION = 1;
@@ -46,12 +48,20 @@ public class MainGame {
     public long lastScore = 0;
     private long bufferScore = 0;
 
+    /**
+     * Create a new MainGame object
+     * @param context activity the game is being created from
+     * @param view the view the game is using
+     */
     public MainGame(Context context, MainView view) {
         mContext = context;
         mView = view;
         endingMaxValue = (int) Math.pow(2, view.numCellTypes - 1);
     }
 
+    /**
+     * Create a new game
+     */
     public void newGame() {
         if (grid == null) {
             grid = new Grid(numSquaresX, numSquaresY);
@@ -75,6 +85,9 @@ public class MainGame {
         mView.invalidate();
     }
 
+    /**
+     * Add the starting tiles
+     */
     private void addStartTiles() {
         int startTiles = 2;
         for (int xx = 0; xx < startTiles; xx++) {
@@ -82,6 +95,9 @@ public class MainGame {
         }
     }
 
+    /**
+     * Add a random tile
+     */
     private void addRandomTile() {
         if (grid.isCellsAvailable()) {
             int value = Math.random() < 0.9 ? 2 : 4;
@@ -90,12 +106,19 @@ public class MainGame {
         }
     }
 
+    /**
+     * Create a new tile
+     * @param tile tile to be created
+     */
     private void spawnTile(Tile tile) {
         grid.insertTile(tile);
         aGrid.startAnimation(tile.getX(), tile.getY(), SPAWN_ANIMATION,
                 SPAWN_ANIMATION_TIME, MOVE_ANIMATION_TIME, null); //Direction: -1 = EXPANDING
     }
 
+    /**
+     * Record the high score
+     */
     private void recordHighScore() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(mContext);
         SharedPreferences.Editor editor = settings.edit();
@@ -103,11 +126,19 @@ public class MainGame {
         editor.commit();
     }
 
+    /**
+     * Return the high score
+     * @return the high score
+     */
     private long getHighScore() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(mContext);
         return settings.getLong(HIGH_SCORE, -1);
     }
 
+    /**
+     * Return true iff it is the user's first run
+     * @return true iff it is the user's first run
+     */
     private boolean firstRun() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(mContext);
         if (settings.getBoolean(FIRST_RUN, true)) {
@@ -119,6 +150,9 @@ public class MainGame {
         return false;
     }
 
+    /**
+     * Prepare the tiles to be moved
+     */
     private void prepareTiles() {
         for (Tile[] array : grid.field) {
             for (Tile tile : array) {
@@ -129,12 +163,20 @@ public class MainGame {
         }
     }
 
+    /**
+     * Move the tile to a new cell
+     * @param tile tile to be moved
+     * @param cell cell the tile is being moved to
+     */
     private void moveTile(Tile tile, Cell cell) {
         grid.field[tile.getX()][tile.getY()] = null;
         grid.field[cell.getX()][cell.getY()] = tile;
         tile.updatePosition(cell);
     }
 
+    /**
+     * Save the undo
+     */
     private void saveUndoState() {
         grid.saveTiles();
         canUndo = true;
@@ -142,12 +184,18 @@ public class MainGame {
         lastGameState = bufferGameState;
     }
 
+    /**
+     * Prepare the undo state to be saved
+     */
     private void prepareUndoState() {
         grid.prepareSaveTiles();
         bufferScore = score;
         bufferGameState = gameState;
     }
 
+    /**
+     * Revert the state back to the undo state
+     */
     public void revertUndoState() {
         if (canUndo) {
             canUndo = false;
@@ -160,18 +208,34 @@ public class MainGame {
         }
     }
 
+    /**
+     * Return true iff the game is won
+     * @return true iff the game is won
+     */
     public boolean gameWon() {
         return (gameState > 0 && gameState % 2 != 0);
     }
 
+    /**
+     * True iff the game is lost
+     * @return iff the game is lost
+     */
     public boolean gameLost() {
         return (gameState == GAME_LOST);
     }
 
+    /**
+     * Return true iff the game is still in progress
+     * @return true iff the game is still in progress
+     */
     public boolean isActive() {
         return !(gameWon() || gameLost());
     }
 
+    /**
+     * Move the grid in a specified direction
+     * @param direction the direction to be moved in
+     */
     public void move(int direction) {
         aGrid.cancelAnimations();
         // 0: up, 1: right, 2: down, 3: left
@@ -243,6 +307,9 @@ public class MainGame {
         mView.invalidate();
     }
 
+    /**
+     * Check if the game is lost
+     */
     private void checkLose() {
         if (!movesAvailable() && !gameWon()) {
             gameState = GAME_LOST;
@@ -250,6 +317,9 @@ public class MainGame {
         }
     }
 
+    /**
+     * End the game
+     */
     private void endGame() {
         aGrid.startAnimation(-1, -1, FADE_GLOBAL_ANIMATION, NOTIFICATION_ANIMATION_TIME, NOTIFICATION_DELAY_TIME, null);
         if (score >= highScore) {
@@ -258,6 +328,10 @@ public class MainGame {
         }
     }
 
+    /**
+     * Get the direction vector
+     * @param direction direction specified by integer
+     */
     private Cell getVector(int direction) {
         Cell[] map = {
                 new Cell(0, -1), // up
@@ -268,6 +342,11 @@ public class MainGame {
         return map[direction];
     }
 
+    /**
+     * Build the list of traversals in x direction
+     * @param vector direction vector
+     * @return list of traversals in x direction
+     */
     private List<Integer> buildTraversalsX(Cell vector) {
         List<Integer> traversals = new ArrayList<>();
 
@@ -281,6 +360,11 @@ public class MainGame {
         return traversals;
     }
 
+    /**
+     * Build list of traversals in y direction
+     * @param vector direction vector
+     * @return list of traversals in y direction
+     */
     private List<Integer> buildTraversalsY(Cell vector) {
         List<Integer> traversals = new ArrayList<>();
 
@@ -294,6 +378,12 @@ public class MainGame {
         return traversals;
     }
 
+    /**
+     * Return the farthest available cell from cell along the direction vector, and the cell before the farthest
+     * @param cell starting cell
+     * @param vector direction vector
+     * @return The farthest available cell from cell, and the cell before the farthest
+     */
     private Cell[] findFarthestPosition(Cell cell, Cell vector) {
         Cell previous;
         Cell nextCell = new Cell(cell.getX(), cell.getY());
@@ -306,10 +396,18 @@ public class MainGame {
         return new Cell[]{previous, nextCell};
     }
 
+    /**
+     * Return true iff there are available moves
+     * @return true iff there are available moves
+     */
     private boolean movesAvailable() {
         return grid.isCellsAvailable() || tileMatchesAvailable();
     }
 
+    /**
+     * Return true iff there are available tile matches
+     * @return true iff there are available tile matches
+     */
     private boolean tileMatchesAvailable() {
         Tile tile;
 
@@ -335,10 +433,20 @@ public class MainGame {
         return false;
     }
 
+    /**
+     * Return true iff first and second have equal positions
+     * @param first the first cell
+     * @param second the second cell
+     * @return true iff first and second have the same position
+     */
     private boolean positionsEqual(Cell first, Cell second) {
         return first.getX() == second.getX() && first.getY() == second.getY();
     }
 
+    /**
+     * Return the value of the tile needed to win
+     * @return the value of the tile needed to win
+     */
     private int winValue() {
         if (!canContinue()) {
             return endingMaxValue;
@@ -347,12 +455,19 @@ public class MainGame {
         }
     }
 
+    /**
+     * Set the game to endless move
+     */
     public void setEndlessMode() {
         gameState = GAME_ENDLESS;
         mView.invalidate();
         mView.refreshLastTime = true;
     }
 
+    /**
+     * Return true iff the game can continue
+     * @return true iff the game can continue
+     */
     public boolean canContinue() {
         return !(gameState == GAME_ENDLESS || gameState == GAME_ENDLESS_WON);
     }
