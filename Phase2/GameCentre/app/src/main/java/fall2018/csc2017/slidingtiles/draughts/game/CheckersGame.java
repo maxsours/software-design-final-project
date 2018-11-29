@@ -64,7 +64,11 @@ public class CheckersGame implements Serializable {
      */
     private int totalMoves = 0;
 
-    // checkers game holds board state and current turn
+    /**
+     * Creates a checkers game with a board state and current turn.
+     *
+     * @param anyMove whether any move is permitted for this checkers game.
+     */
     public CheckersGame(boolean anyMove) {
         gameBoard = new CheckerBoard(this);
         turn = CheckersGame.BLACK;
@@ -73,6 +77,9 @@ public class CheckersGame implements Serializable {
         allowAnyMove = anyMove;
     }
 
+    /**
+     * Restarts the checker game being played.
+     */
     public void restart() {
         gameBoard = new CheckerBoard(this);
         turn = CheckersGame.BLACK;
@@ -84,7 +91,11 @@ public class CheckersGame implements Serializable {
         allowAnyMove = anyMove;
     }
 
-    // check whose turn it is
+    /**
+     * Returns whose turn it is in the checkers game.
+     *
+     * @return whose turn it is in the checkers game.
+     */
     public int whoseTurn() {
         return turn;
     }
