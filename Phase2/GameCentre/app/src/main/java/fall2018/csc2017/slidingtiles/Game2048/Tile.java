@@ -4,7 +4,7 @@ package fall2018.csc2017.slidingtiles.Game2048;
 
 /*
  * Adapted from a open source project from Jerry Jiang:
- * hhttps://github.com/tpcstld/2048/blob/master/2048/2048/src/main/java/com/tpcstld/twozerogame/Tile.java
+ * https://github.com/tpcstld/2048/blob/master/2048/2048/src/main/java/com/tpcstld/twozerogame/Tile.java
  */
 
 
