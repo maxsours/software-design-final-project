@@ -1,6 +1,8 @@
 package fall2018.csc2017.slidingtiles.draughts.game;
 
-public class CheckersGame {
+import java.io.Serializable;
+
+public class CheckersGame implements Serializable {
     public static final int NONE = 0;
     public static final int BLACK = 1;
     public static final int RED = 2;

@@ -1,11 +1,12 @@
 package fall2018.csc2017.slidingtiles.draughts.game;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Greg on 8/6/2017.
  */ // data for complete board state
-public class CheckerBoard {
+public class CheckerBoard implements Serializable {
     //private CheckersGame checkersGame;
     private Piece board[][];
 
@@ -55,7 +56,7 @@ public class CheckerBoard {
     }
 
     // create from existing positions
-    public CheckerBoard(int[][] positions) {
+    public CheckerBoard(Integer [][] positions) {
         //this.checkersGame = checkersGame;
         board = new Piece[8][8];
         for (int x = 0; x < 8; x++) {
@@ -72,8 +73,8 @@ public class CheckerBoard {
     }
 
     // save positions as int[][]
-    public int[][] saveBoard() {
-        int result[][] = new int[8][8];
+    public Integer[][] saveBoard() {
+        Integer result[][] = new Integer[8][8];
         for (int x = 0; x < 8; x++) {
             for (int y = 0; y < 8; y++) {
                 if (board[x][y] != null) {

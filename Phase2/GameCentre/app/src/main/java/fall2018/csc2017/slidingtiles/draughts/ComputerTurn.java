@@ -2,6 +2,7 @@ package fall2018.csc2017.slidingtiles.draughts;
 
 import android.os.AsyncTask;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import fall2018.csc2017.slidingtiles.draughts.game.CheckerBoard;
@@ -9,7 +10,7 @@ import fall2018.csc2017.slidingtiles.draughts.game.CheckersGame;
 import fall2018.csc2017.slidingtiles.draughts.game.Move;
 import fall2018.csc2017.slidingtiles.draughts.game.Piece;
 
-public class ComputerTurn extends AsyncTask<String, String, String>
+public class ComputerTurn extends AsyncTask<String, String, String> implements Serializable
 {
     private MyCheckersActivity myActivity;
     private CheckersGame myGame;
@@ -40,7 +41,7 @@ public class ComputerTurn extends AsyncTask<String, String, String>
 
         int score = 999;
 
-        int[][] data = base.saveBoard();
+        Integer [][] data = base.saveBoard();
         for (Move move : baseMoves)
         {
             CheckerBoard specificBoard = new CheckerBoard(data);
@@ -73,7 +74,7 @@ public class ComputerTurn extends AsyncTask<String, String, String>
         CheckerBoard realBoard = myGame.getBoard();
         Move moves[] = myGame.getMoves();
 
-        int[][] data = realBoard.saveBoard();
+        Integer[][] data = realBoard.saveBoard();
 
         ArrayList<Move> bestMoves = new ArrayList<>();
         int bestScore = 1000;
@@ -174,7 +175,7 @@ public class ComputerTurn extends AsyncTask<String, String, String>
                 myActivity.statusText.setText("You won!");
                 wonStatus = true;
 
-                myActivity.setWinStatus(true, myDifficulty);
+                myActivity.setWinStatus(wonStatus, myDifficulty);
             }
         }
     }

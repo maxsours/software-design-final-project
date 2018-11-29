@@ -269,10 +269,11 @@ public class MainActivity extends AppCompatActivity {
         Collections.sort(temp);
         tempCounter = searchNonZeroIndex(temp);
 
+        int pointer = temp.size() -1 ;
         for(int counter = 0; counter < 5; counter ++){
-            if(tempCounter < temp.size()){
-                scoreList.set(counter, temp.get(tempCounter));
-                    tempCounter++;
+            if(tempCounter <= pointer){
+                scoreList.set(counter, temp.get(pointer));
+                pointer--;
             }else{
                 scoreList.set(counter, new Score(currentUser,0, ""));
             }

@@ -9,13 +9,15 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.util.DisplayMetrics;
 
+import java.io.Serializable;
+
 import fall2018.csc2017.slidingtiles.R;
 import fall2018.csc2017.slidingtiles.draughts.game.CheckerBoard;
 import fall2018.csc2017.slidingtiles.draughts.game.CheckersGame;
 import fall2018.csc2017.slidingtiles.draughts.game.Piece;
 import fall2018.csc2017.slidingtiles.draughts.game.Position;
 
-public class CheckersLayout extends TableLayout {
+public class CheckersLayout extends TableLayout implements Serializable {
 
     public class CheckerImageView extends AppCompatImageView {
         public int x;

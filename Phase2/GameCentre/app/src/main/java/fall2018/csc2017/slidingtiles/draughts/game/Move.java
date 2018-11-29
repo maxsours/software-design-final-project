@@ -1,11 +1,12 @@
 package fall2018.csc2017.slidingtiles.draughts.game;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Greg on 8/6/2017.
  */ // move as a sequence of positions and list of capture positions
-public class Move {
+public class Move implements Serializable {
     public ArrayList<Position> positions;
     public ArrayList<Position> captures;
     public boolean kings;
