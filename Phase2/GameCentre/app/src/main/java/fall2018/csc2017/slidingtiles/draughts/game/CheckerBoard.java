@@ -19,8 +19,6 @@ public class CheckerBoard implements Serializable {
         return isGameSquare(pos.x, pos.y);
     }
 
-
-    //
     private Position[] RED_DIRECTIONS = new Position[]{new Position(-1, 1), new Position(1, 1)};
     private Position[] BLACK_DIRECTIONS = new Position[]{new Position(-1, -1), new Position(1, -1)};
     private Position[] BOTH_DIRECTIONS = new Position[]{new Position(-1, 1), new Position(1, 1), new Position(-1, -1), new Position(1, -1)};
@@ -39,6 +37,7 @@ public class CheckerBoard implements Serializable {
 
 
     // create new board
+
     public CheckerBoard(CheckersGame checkersGame) {
         //this.checkersGame = checkersGame;
         board = new Piece[8][8];

@@ -39,6 +39,9 @@ public class CheckersLayout extends TableLayout implements Serializable {
         }
     };
 
+    /**
+     *  refresh the position/layout of every checker piece
+     */
     public void refresh() {
         CheckerBoard myBoard = myGame.getBoard();
         for (int x = 0; x < 8; x++) {
@@ -83,6 +86,12 @@ public class CheckersLayout extends TableLayout implements Serializable {
         }
     }
 
+    /**
+     * display the board layout
+     *
+     * @param game the existing CheckersGame object
+     * @param activity the existing MyCheckersActivity object
+     */
     public CheckersLayout(CheckersGame game, MyCheckersActivity activity) {
         super(activity);
         myActivity = activity;
