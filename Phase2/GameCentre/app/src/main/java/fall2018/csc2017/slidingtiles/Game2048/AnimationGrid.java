@@ -2,6 +2,14 @@ package fall2018.csc2017.slidingtiles.Game2048;
 
 import java.util.ArrayList;
 
+
+
+/*
+ * Adapted from a open source project from Jerry Jiang:
+ * https://github.com/tpcstld/2048/blob/master/2048/2048/src/main/java/com/tpcstld/twozerogame/AnimationGrid.java
+ */
+
+
 /**
  * A grid of animation cells
  */
