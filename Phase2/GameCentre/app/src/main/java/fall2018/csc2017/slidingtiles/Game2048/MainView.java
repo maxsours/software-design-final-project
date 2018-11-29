@@ -678,4 +678,8 @@ public class MainView extends View {
     public boolean getHasLost(){
         return this.hasLost;
     }
+
+    public void setHasLost(){
+        this.hasLost = false;
+    }
 }
