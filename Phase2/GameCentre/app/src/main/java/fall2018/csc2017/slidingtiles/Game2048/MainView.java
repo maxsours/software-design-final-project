@@ -14,6 +14,15 @@ import android.view.View;
 import java.util.ArrayList;
 
 import fall2018.csc2017.slidingtiles.R;
+
+
+/*
+ * Adapted from a open source project from Jerry Jiang:
+ * https://github.com/tpcstld/2048/blob/master/2048/2048/src/main/java/com/tpcstld/twozerogame/MainView.java
+ */
+
+
+
 @SuppressWarnings("deprecation")
 /**
  * The main view of the 2048 game
@@ -677,5 +686,9 @@ public class MainView extends View {
      */
     public boolean getHasLost(){
         return this.hasLost;
+    }
+
+    public void setHasLost(){
+        this.hasLost = false;
     }
 }

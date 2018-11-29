@@ -1,5 +1,6 @@
 package fall2018.csc2017.slidingtiles.Game2048;
 
+
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -20,6 +21,13 @@ import java.util.Date;
 import fall2018.csc2017.slidingtiles.GameActivity;
 import fall2018.csc2017.slidingtiles.Score;
 import fall2018.csc2017.slidingtiles.User;
+
+
+/*
+ * Adapted from a open source project from Jerry Jiang:
+ * https://github.com/tpcstld/2048/blob/master/2048/2048/src/main/java/com/tpcstld/twozerogame/MainActivity.java
+ */
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -91,6 +99,12 @@ public class MainActivity extends AppCompatActivity {
             view.game.move(1);
             return true;
         }
+
+//        if(view.getHasLost() == true){
+//            saveScoreToFile();
+//            view.setHasLost();
+//        }
+
         return super.onKeyDown(keyCode, event);
     }
 
@@ -144,6 +158,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(view.getHasLost() == true){
             saveScoreToFile();
+            view.setHasLost();
         }
     }
 

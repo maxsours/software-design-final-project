@@ -7,6 +7,15 @@ import android.view.View;
 
 import fall2018.csc2017.slidingtiles.R;
 
+/*
+ * Adapted from a open source project from Jerry Jiang:
+ * https://github.com/tpcstld/2048/blob/master/2048/2048/src/main/java/com/tpcstld/twozerogame/InputListener.java
+ */
+
+
+
+
+
 /**
  * Collects and interprets the movements of the user on the touch screen to game actions
  */
