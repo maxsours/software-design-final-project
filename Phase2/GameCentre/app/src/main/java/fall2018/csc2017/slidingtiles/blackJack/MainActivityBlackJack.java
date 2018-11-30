@@ -39,14 +39,13 @@ public class MainActivityBlackJack extends AppCompatActivity {
 
     /**
      * this is the method that creates the the game
-     * @param savedInstanceState this is the referrence to the bundle that creats
+     * @param savedInstanceState this is the referrence to the bundle that is passed to all create methods
      */
     @Override
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_blackjack);
-
         ImageView playerCard1 = findViewById(R.id.myCard1);
         ImageView playerCard2 = findViewById(R.id.myCard2);
 
@@ -89,6 +88,13 @@ public class MainActivityBlackJack extends AppCompatActivity {
         readyDialog.show();
     }
 
+    /**
+     * this method returns a string of the list items to be displaed on how much you
+     * can bet, the reason this is needed is so that you cant bet more money than you have
+     * @param betValues this is the original string that needs to be checked for removing elements
+     * @return this is the returned string array that accomadates the players current balance
+     * so they cant bet more money than they have
+     */
     private String[] verifyBet(String[] betValues) {
         int[] betQuantities = new int[betValues.length];
         TextView gameBalance = findViewById(R.id.availableBalance);
@@ -113,7 +119,10 @@ public class MainActivityBlackJack extends AppCompatActivity {
     }
 
     /**
-     * @param playersTotal this is passed on tell the user their hand total through a snackbar
+     * this methods is used to display to the player the current total value in their hand
+     * @param playersTotal this takes the value of their hand which was given by an earlier method
+     * @return this returns an object that is capapble of displaying the total hand value to the
+     * player
      */
     private Snackbar displayHand(int playersTotal) {
         //if this part isnt working its prob because of the new statement
@@ -127,17 +136,23 @@ public class MainActivityBlackJack extends AppCompatActivity {
     }
 
     /**
-     * @param playerCard1 the first card of the player
-     * @param houseCard1  the first card of the dealer
-     * @param playerCard2 the second card of the player
-     * @param houseCard2  the second card of the dealer
-     * @return the value of the players full hand, this is so they can know their total
+     *  this returns back the total value fo the the players Hand after setting up the first two
+     *  cards of the player and the dealer
+     * @param playerCard1 this is the first card of the player and receives all the information of
+     *                    the random draw a player would make
+     * @param houseCard1 this is the first card of the dealer and receives all the information of the
+     *                   random draw given to the dealer
+     * @param playerCard2 this is the second draw of the player and receives all the information of
+     *                    the random draw a player would make
+     * @param houseCard2 this is the second draw of the dealer and receives all the information of the
+     *                   random draw given to the dealer
+     * @return this returns the total value of the players hand
      */
     private int setInitialCards(ImageView playerCard1, ImageView houseCard1,
                                 ImageView playerCard2, ImageView houseCard2) {
 
         Collections.shuffle(Arrays.asList(cards));
-        //player one draws their card which is then removed from the deck
+        //the player takes the first card, reveals it and has it's value
         int draw = 0;
         playerCard1.setImageResource(cards[draw][0]);
         playerCard1.setTag(Integer.toString(cards[draw][1]));
@@ -170,6 +185,9 @@ public class MainActivityBlackJack extends AppCompatActivity {
         houseCard2.setVisibility(View.VISIBLE);
         cards = reduceDeck(cards, draw4);
 
+        //as per Black Jack rules if the total of the players hand is between 9 and
+        //11 then they can double down on their bet provided they have the money to
+        //do so
         if (9 <= playerHandTotal && playerHandTotal <= 11) {
             Button doubler = findViewById(R.id.doubleButton);
             doubler.setVisibility(View.VISIBLE);
@@ -179,6 +197,9 @@ public class MainActivityBlackJack extends AppCompatActivity {
     }
 
     /**
+     * this is a method that takes the full possible hand that a player can achieve and
+     * retrieves the values of each hand, face down cards besides the dealers second card
+     * all have a value of 0 and thus it returns the active hand's amount
      * @param card1 the first card of whichever player
      * @param card2 the second card of whichever player
      * @param card3 the third card of whichever player
@@ -204,9 +225,12 @@ public class MainActivityBlackJack extends AppCompatActivity {
     }
 
     /**
-     * @param allcards this is the full deck that gets sent in to have its card drawn
-     * @param position this is the position of the drawn card
-     * @return returns a deck without that card, since cards don't repeat
+     * this method takes the deck of cards and reduces it by one in the position of the
+     * card that was last drawn at its index, this is to mimic a limited card deck so
+     * the chance of repeat cards is unlikely
+     * @param allcards this is the array array that the cards are stored in with their values
+     * @param position this is the position of the last drawn card
+     * @return this is the deck returned without that one card
      */
     private int[][] reduceDeck(int[][] allcards, int position) {
         int[][] newDeck = new int[allcards.length - 1][2];
@@ -220,6 +244,16 @@ public class MainActivityBlackJack extends AppCompatActivity {
         return newDeck;
     }
 
+    /**
+     * this is the stand option that is available in every game of standard
+     * Black Jack. Stand is when the player is done with their cards and the dealer
+     * draws till they have 17 or above. during this time the player can either gain
+     * money, lose money or lose nothing depending on dealers outcomes. neither player
+     * can get above 21 but a result fo exactly 21 is preferred.  the one with the higher
+     * number wins while taking the above into account. if the player won through
+     * blackjack then they get 1.5 times the amount
+     * @param v this containes the listener for the stand button click event
+     */
     public void standOnClick(View v) {
         ImageView playerCard1 = findViewById(R.id.myCard1);
         ImageView playerCard2 = findViewById(R.id.myCard2);
@@ -309,6 +343,13 @@ public class MainActivityBlackJack extends AppCompatActivity {
 
     }
 
+    /**
+     * this is the hit option available at every standard Black Jack game. This option
+     * signifies that the player would like to draw another card. if the value of his
+     * hand exceed 21 then it is a bust with all hsi money lost, if it is below 21 then
+     * he simply requires the dealer to get below that.
+     * @param v this is the listener set for the HIt button
+     */
     public void hitOnClick(View v) {
         ImageView playerCard1 = findViewById(R.id.myCard1);
         ImageView playerCard2 = findViewById(R.id.myCard2);
@@ -359,6 +400,13 @@ public class MainActivityBlackJack extends AppCompatActivity {
 
     }
 
+    /**
+     * this is the double option that is available to use in standard blackJack but is not
+     * entirely crucial for the progress of the game. if the player has between 9 to 11 on the
+     * value of his first 2 cards then he can choose to accept one card alone to double his bet
+     * under the reasoning that they have that money available.
+     * @param v this is the listener for the double button.
+     */
     public void doubleOnClick(View v) {
         ImageView playerCard1 = findViewById(R.id.myCard1);
         ImageView playerCard2 = findViewById(R.id.myCard2);
@@ -405,6 +453,27 @@ public class MainActivityBlackJack extends AppCompatActivity {
         doubleButton.setVisibility(View.GONE);
     }
 
+    /**
+     *  this is the method that reset the entire board after a result has come whether it is the
+     *  player or the dealers win or a draw
+     * @param state this is the "state" under which the game ended, depending on how the
+     *              game ended the state can have different numbers and these modify the
+     *              display message on the game. the method then
+     * @param playerCard1 this is the first card of the player, it is reset and put back face-down
+     * @param playerCard2 this is the second card of the player, it is reset and put back face-down
+     * @param playerCard3 this is the third card of the player, it is reset and put back face-down
+     * @param playerCard4 this is the fourth card of the player, it is reset and put back face-down
+     * @param playerCard5 this is the fifth card of the player, it is reset and put back face-down
+     * @param playerCard6 this is the sixth card of the player, it is reset and put back face-down
+     * @param playerCard7 this is the seventh card of the player, it is reset and put back face-down
+     * @param houseCard1 this is the first card of the dealer, it is reset and put back face-down
+     * @param houseCard2 this is the second card of the dealer, it is reset and put back face-down
+     * @param houseCard3 this is the third card of the dealer, it is reset and put back face-down
+     * @param houseCard4 this is the fourth card of the dealer, it is reset and put back face-down
+     * @param houseCard5 this is the fifth card of the dealer, it is reset and put back face-down
+     * @param houseCard6 this is the sixth card of the dealer, it is reset and put back face-down
+     * @param houseCard7 this is the seventh card of the dealer, it is reset and put back face-down
+     */
     private void resetBoard(int state, final ImageView playerCard1, final ImageView playerCard2,
                             ImageView playerCard3, ImageView playerCard4, ImageView playerCard5,
                             ImageView playerCard6, ImageView playerCard7, final ImageView houseCard1,
