@@ -115,5 +115,7 @@ After clicking the button on the game centre labeled 2048, here are the features
     you succeeded in constructing.
     
     "HIGH SCORE" - is the maximum score you have achieved throughout your 2048 career.
+    
+- **Autosave** - After every action the game auto saves the board.
 
 
