@@ -99,12 +99,6 @@ public class MainActivity extends AppCompatActivity {
             view.game.move(1);
             return true;
         }
-
-//        if(view.getHasLost() == true){
-//            saveScoreToFile();
-//            view.setHasLost();
-//        }
-
         return super.onKeyDown(keyCode, event);
     }
 
@@ -156,10 +150,7 @@ public class MainActivity extends AppCompatActivity {
         editor.putInt(UNDO_GAME_STATE, view.game.lastGameState);
         editor.commit();
 
-        if(view.getHasLost() == true){
-            saveScoreToFile();
-            view.setHasLost();
-        }
+        saveScoreToFile();
     }
 
     /**
@@ -231,7 +222,7 @@ public class MainActivity extends AppCompatActivity {
             String dateToday = formatter.format(date);
             game2048SaveFile = currentUser + SCORE_FILENAME_TEMPLATE;
 
-            newHighScore = new Score(currentUser, (int) view.game.highScore, dateToday);
+            newHighScore = new Score(currentUser, (int) view.game.score, dateToday);
             setDefaultValueForArray();
             loadScoreFromFile(game2048SaveFile);
             compareScore(newHighScore);
@@ -302,20 +293,32 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<Score> temp = new ArrayList<>();
         int tempCounter;
 
+
         for(int  counter = 0; counter < 5; counter ++){
             temp.add(scoreList.get(counter));
         }
-        temp.add(other);
-        Collections.sort(temp);
-        tempCounter = searchNonZeroIndex(temp);
 
-        int pointer = temp.size() -1 ;
-        for(int counter = 0; counter < 5; counter ++){
-            if(tempCounter <= pointer){
-                scoreList.set(counter, temp.get(pointer));
-                pointer--;
-            }else{
-                scoreList.set(counter, new Score(currentUser,0, ""));
+        int distinctContent = 0;
+
+        for(Score score : temp){
+            if(score.getScore() != other.getScore()){
+                distinctContent++;
+            }
+        }
+
+        if(distinctContent == 5){
+            temp.add(other);
+            Collections.sort(temp);
+            tempCounter = searchNonZeroIndex(temp);
+
+            int pointer = temp.size() -1 ;
+            for(int counter = 0; counter < 5; counter ++){
+                if(tempCounter <= pointer){
+                    scoreList.set(counter, temp.get(pointer));
+                    pointer--;
+                }else{
+                    scoreList.set(counter, new Score(currentUser,0, ""));
+                }
             }
         }
     }
