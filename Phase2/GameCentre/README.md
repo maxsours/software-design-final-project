@@ -1,18 +1,18 @@
 # README
 ## URL TO CLONE:
-    https://markus.teach.cs.toronto.edu/git/csc207-2018-09-reg/group_0513
+    https://markus.teach.cs.toronto.edu/git/csc207-2018-09-reg/group_0652
 
 ## ANDROID STUDIO SETUP INSTRUCTIONS:
 On Android Studio press check out project from version control, select Git.
 When prompted use the given URL and the directory below the URL should
-end with \StudioProjects\group_0513. Clone the project.
+end with \StudioProjects\group_0652. Clone the project.
 Click yes when asked if you want to create an android studio project
 Have Import project from external model selected, with Gradle selected.
-Set the Gradle Project to be: StudioProjects\group_0513\Phase1\GameCentre
+Set the Gradle Project to be: StudioProjects\group_0652\Phase2\GameCentre
 Without changing any other configurations, press Finish.
 Press Ok if you are prompted To sync android SDKs.
 Unregistered VSC root detected message will appear. Select add root.
-Now the app may be succesfully run. As per the assignment requirements,
+Now the app may be successfully run. As per the assignment requirements,
 we emulated our software using a Pixel 2 when writing this program,
 running API 27, and we encourage our users to run the app with the same
 conditions.
@@ -20,7 +20,28 @@ conditions.
 ## DESCRIPTION OF VARIOUS IMPLEMENTED FUNCTIONALITIES:
 	Once the app has been configured by above steps, the app may run. When the app runs, the 
 	Game Launch Centre page will appear. Here the user has several features, listed below: 
-
+### Game Centre
+- **HIGH SCORE** - This button will handles the per-user score. Pressing this button will show 
+     ​    the best score for each game. For example, in our game center we implemented 3 games,
+     ​    Draughts, 2048 and Sliding Tiles, pressing this button will show the best scores achieved
+         for the three games. It will not show how you perform against other users.
+- **CREATE ACCOUNT** - There are 2 text fields which allow user to type their username and password.
+     ​    When the "CREATE ACCOUNT" button is pressed, and the username already exist,
+     ​    a pop up text "User Already Exists" will appear. If new account is
+     ​    successfully created, a pop up text "User Added".
+- **LOGIN** - This button will validate the username and password entered in the text fields. If the
+     ​    text fields are both empty, then the a pop up text "Incorrect Username". If the user
+     ​    enters a correct credentials, then a pop up text "Welcome (username)" will appear. 
+     ​    Subsequently, a "LOG OUT" button will appear.In cases where the user decides not to 
+     ​    login and play the game, then the user will be playing as "Guest".
+     
+- **Game Launcher** - There are three buttons on the top of the screen, each game having their own
+         respective button. The buttons are labeled Sliding Tiles, Draughts and 2048 and when tapped
+         will launch the game on the label.
+     
+    
+    
+### Sliding Tiles Game
 - **NEW GAME** - Pressing this button will prompt a cyan coloured pop up to appear on screen.
          If the user mistakenly pressed the new game button, the user may revert this mistake by 
          either pressing back on their phone, or pressing anywhere on screen off of the pop up;
@@ -52,19 +73,7 @@ conditions.
      ​    score and the user's score will not be compared against other users. Assuming 
      ​    the user never login and plays the game, then all the scores will be save under 
      ​    the username "Guest". 
-- **USER SUMMARY** - This button will handles the per-user score. Pressing this button will show 
-     ​    the best score for each game. For example,if the game center were to implement
-     ​    sudoku and sliding puzzle, pressing this button will show the best score for sliding
-     ​    tiles and sudoku. It will not show how you perform against other users.
-- **CREATE ACCOUNT** - There are 2 text field which allow user to type their username and password.
-     ​    When the "CREATE ACCOUNT" button is pressed, and the username already exist,
-     ​    a pop up text "User Already Exists" will appear. If new account is
-     ​    successfully created, a pop up text "User Added".
-- **LOGIN** - This button will validate the username and password entered in the text fields. If the
-     ​    text fields are both empty, then the a pop up text "Incorrect Username". If the user
-     ​    enters a correct credentials, then a pop up text "Welcome (username)" will appear. 
-     ​    Subsequently, a "LOG OUT" button will appear.In cases where the user decides not to 
-     ​    login and play the game, then the user will be playing as "Guest".
+
 - **Auto Save** - In addition to the save Button, we've implemented the feature that the game 
      ​    will auto save the game every 3 moves (not counting undos). The type of data saved
      ​    is the same as the implementation of "SAVE GAME" button.
@@ -73,4 +82,11 @@ conditions.
             There is a limit on undos allowed set by the spinner above start new game labeled 
             "undo limit".
 
-            
+### Draughts
+
+
+
+
+
+
+### 2048
