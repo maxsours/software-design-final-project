@@ -228,7 +228,6 @@ public class ScoreActivity extends AppCompatActivity {
                 scoreDetails.append("\n");
             }
         }
-        System.out.println(scoreDetails);
         return scoreDetails;
     }
 
