@@ -47,6 +47,7 @@ public class ActualStartingActivity extends AppCompatActivity {
         addDraughtsButtonListener();
         add2048sButtonListener();
         addHighScoreButtonListener();
+        addBlackJackButtonListener();
     }
 
 
@@ -332,6 +333,38 @@ public class ActualStartingActivity extends AppCompatActivity {
     public void open2048 () {
         Intent intent = new Intent(this, fall2018.csc2017.slidingtiles.
                 Game2048.MainActivity.class);
+        startActivity(intent);
+    }
+
+    public User getActiveUser(){
+        return this.activeUser;
+    }
+
+    /**
+     * Button for Black Jack game in Game Centre
+     */
+    private Button blackJack;
+
+    /**
+     * Activate blackJack button
+     */
+    private void addBlackJackButtonListener(){
+        blackJack = findViewById(R.id.BlackJackButton);
+
+        blackJack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openblackJack();
+            }
+        });
+    }
+
+    /**
+     * Transition to Black Jack game.
+     */
+    public void openblackJack() {
+        Intent intent = new Intent(this, fall2018.csc2017.slidingtiles.
+                blackJack.MainActivityBlackJack.class);
         startActivity(intent);
     }
 

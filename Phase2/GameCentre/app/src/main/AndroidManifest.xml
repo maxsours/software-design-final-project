@@ -28,7 +28,13 @@
         <activity android:name=".draughts.SettingsActivity" />
         <activity android:name=".draughts.MyCheckersActivity" />
         <activity android:name=".Game2048.MainActivity" />
+        <activity android:name=".blackJack.MainActivityBlackJack">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

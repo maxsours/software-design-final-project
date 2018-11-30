@@ -27,6 +27,14 @@
     <string name="for_now">For now…</string>
     <string name="endless">"Endless" Mode</string>
 
+    <string name="stand_text">Stand</string>
+    <string name="hit_text">Hit</string>
+    <string name="double_text">Double</string>
+    <string name="player_score_message">Your current bet is :</string>
+    <string name="player_balance_message">Your current balance is :</string>
+    <string name="player_balance_">1000</string>
+    <string name="zero">0</string>
+
     <!-- Confirmation dialog-->
     <string name="reset">Reset</string>
     <string name="continue_game">Cancel</string>
