@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 
+import fall2018.csc2017.slidingtiles.CheckersScore;
 import fall2018.csc2017.slidingtiles.GameActivity;
 import fall2018.csc2017.slidingtiles.R;
 import fall2018.csc2017.slidingtiles.Score;
@@ -441,7 +442,7 @@ public class MyCheckersActivity extends AppCompatActivity {
             Date date = new Date();
             String dateToday = formatter.format(date);
             checkersScoreFile = currentUser + SCORE_FILENAME_TEMPLATE;
-            score = new Score(currentUser, finalScore, difficulty, dateToday);
+            score = new CheckersScore(currentUser, finalScore, difficulty, dateToday);
             setDefaultValueForArray();
             loadScoreFromFile(checkersScoreFile);
             compareScore(score, difficulty, currentUser);
@@ -549,7 +550,7 @@ public class MyCheckersActivity extends AppCompatActivity {
                         scoreList.set(counter, temp.get(pointer));
                         pointer--;
                     }else{
-                        scoreList.set(counter, new Score(username,0,"Easy", ""));
+                        scoreList.set(counter, new CheckersScore(username,0,"Easy", ""));
                     }
                 }
                 break;
@@ -567,7 +568,7 @@ public class MyCheckersActivity extends AppCompatActivity {
                         scoreList.set(counter, temp.get(pointer));
                         pointer--;
                     }else{
-                        scoreList.set(counter, new Score(username,0,"Medium", ""));
+                        scoreList.set(counter, new CheckersScore(username,0,"Medium", ""));
                     }
                 }
                 break;
@@ -585,7 +586,7 @@ public class MyCheckersActivity extends AppCompatActivity {
                         scoreList.set(counter, temp.get(pointer));
                         pointer--;
                     }else{
-                        scoreList.set(counter, new Score(username,0,"Hard", ""));
+                        scoreList.set(counter, new CheckersScore(username,0,"Hard", ""));
                     }
                 }
                 break;
@@ -603,7 +604,7 @@ public class MyCheckersActivity extends AppCompatActivity {
                         scoreList.set(counter, temp.get(pointer));
                         pointer--;
                     }else{
-                        scoreList.set(counter, new Score(username,0,"Very Hard", ""));
+                        scoreList.set(counter, new CheckersScore(username,0,"Very Hard", ""));
                     }
                 }
                 break;
@@ -650,7 +651,7 @@ public class MyCheckersActivity extends AppCompatActivity {
             }else{
                 difficulty = "Very Hard";
             }
-            Score score = new Score (currentUser,0, difficulty, "");
+            Score score = new CheckersScore (currentUser,0, difficulty, "");
             scoreList.add(score);
         }
     }

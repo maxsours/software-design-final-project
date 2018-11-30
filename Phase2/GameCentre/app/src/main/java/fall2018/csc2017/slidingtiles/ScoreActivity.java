@@ -220,7 +220,7 @@ public class ScoreActivity extends AppCompatActivity {
         for(int counter = start; counter < end; counter ++){
             if(scoreList.get(counter).getScore() != 0){
 
-                scoreDetails.append((scoreList.get(counter).getDifficulty()));
+                scoreDetails.append(((CheckersScore)scoreList.get(counter)).getDifficulty());
                 scoreDetails.append("\t\t\t\t\t");
                 scoreDetails.append(scoreList.get(counter).getDate());
                 scoreDetails.append("\t\t");

@@ -8,25 +8,7 @@ import java.io.Serializable;
 public class Score implements Serializable, Comparable<Score> {
     private String user;
     private int score;
-    private int puzzleSize;
     private String date;
-    private String difficulty;
-
-    //constructor used by sliding tiles
-    public Score (String user,int score, int puzzleSize,String completionDate){
-        this.user = user;
-        this.score = score;
-        this.puzzleSize = puzzleSize;
-        this.date = completionDate;
-    }
-
-    //constructor used by checkers
-    public Score(String user, int score, String difficulty, String completionDate) {
-        this.user = user;
-        this.score = score;
-        this.difficulty = difficulty;
-        this.date = completionDate;
-    }
 
     //constructor used by 2048
     public Score(String user, int score, String completionDate){
@@ -43,17 +25,10 @@ public class Score implements Serializable, Comparable<Score> {
         return user;
     }
 
-    public int getPuzzleSize(){
-        return puzzleSize;
-    }
-
     public String getDate(){
         return this.date;
     }
 
-    public String getDifficulty() {
-        return this.difficulty;
-    }
 
     public int compareTo(Score other) {
         if (this.score < other.getScore()) {

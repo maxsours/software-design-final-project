@@ -1,10 +1,9 @@
 package fall2018.csc2017.slidingtiles.Game2048;
 
 
-import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-
 import org.junit.Test;
+
+import java.lang.reflect.Array;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
@@ -155,7 +154,33 @@ public class TileAndCellTest {
         grid.revertTiles();
         assertEquals(2, grid.getCellContent(3, 2).getValue());
         assertNull(grid.getCellContent(3, 3));
+    }
 
+    /**
+     * Simulate merging two tiles
+     */
+    @Test
+    public void testMergeTiles(){
+        makeFullGrid();
+        Tile[] removedTiles = new Tile[2];
+        removedTiles[0] = grid.getCellContent(3, 3);
+        removedTiles[1] = grid.getCellContent(3, 2);
+        grid.removeTile(removedTiles[0]);
+        grid.removeTile(removedTiles[1]);
+        Tile newTile = new Tile(3, 2, removedTiles[0].getValue() + removedTiles[1].getValue());
+        newTile.setMergedFrom(removedTiles);
+        grid.insertTile(newTile);
+        assertEquals(removedTiles, grid.getCellContent(3, 2).getMergedFrom());
+    }
+
+    /**
+     * Test tile merging and construction
+     */
+    @Test
+    public void testTileConstruction(){
+        makeClearGrid();
+        grid.insertTile(new Tile(cells[0][0], 2));
+        assertNull(grid.getCellContent(0, 0).getMergedFrom());
     }
 
 }
