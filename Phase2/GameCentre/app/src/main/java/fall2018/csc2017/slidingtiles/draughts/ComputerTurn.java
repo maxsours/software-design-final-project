@@ -11,25 +11,49 @@ import fall2018.csc2017.slidingtiles.draughts.game.Move;
 import fall2018.csc2017.slidingtiles.draughts.game.Piece;
 
 /**
+ * Responds to the Users move with an automated opponent checker move.
  * Adapted on 2018/11/15 from an openly available applet by Greg Tour:
  * https://github.com/gregtour/CheckersAndroid
  */
 public class ComputerTurn extends AsyncTask<String, String, String> implements Serializable
 {
+    /**
+     * The currently played checker game's activity.
+     */
     private MyCheckersActivity myActivity;
+
+    /**
+     * The current played checker game.
+     */
     private CheckersGame myGame;
+
+    /**
+     * The currently played checker game's difficulty.
+     */
     private String myDifficulty;
+
+    /**
+     * The selected move by ComputerTurn.
+     */
     private Move selectedMove;
+
+    /**
+     * Whether any move is permitted in the currently played checker game.
+     */
     private boolean allowAnyMove;
+
+    /**
+     * Whether the game has been won.
+     */
     private boolean wonStatus ;
 
     /**
-     * constructor for ComputerTurn
+     * The constructor for ComputerTurn
      *
      * @param activity the new/current MyCheckersActivity
      * @param game the new/current CheckersGame
      * @param difficulty the difficulty of the game
-     * @param allowAny
+     * @param allowAny whether any move is permitted in the game
      */
     public ComputerTurn(MyCheckersActivity activity,
                         CheckersGame game,
@@ -47,12 +71,12 @@ public class ComputerTurn extends AsyncTask<String, String, String> implements S
     }
 
     /**
-     *the algorithm for the the AI to play the checkers
+     *The algorithm for the the AI to play the checkers
      *
      * @param base the currently played CheckerBoard
      * @param turn whether it is the AI's turn
-     * @param depth
-     * @return the Ai's decided move
+     * @param depth the current depth of search for the algorithm.
+     * @return the algorithm's decided move
      */
     protected int minimax(CheckerBoard base, int turn, int depth)
     {
@@ -79,10 +103,8 @@ public class ComputerTurn extends AsyncTask<String, String, String> implements S
             }
 
             if (turn == CheckersGame.RED) {
-                // MIN
                 score = (moveScore < score) ? moveScore : score;
             } else if (turn == CheckersGame.BLACK) {
-                // MAX
                 score = (moveScore > score) ? moveScore : score;
             }
         }
@@ -90,9 +112,9 @@ public class ComputerTurn extends AsyncTask<String, String, String> implements S
     }
 
     /**
-     * determine whether the AI should use the random moves
-     * @param depth
-     * @return the randomed moves
+     * Determines whether the AI should use a random move; plays random move if deemed appropriate.
+     * @param depth the current depth of search for the algorithm.
+     * @return random move
      */
     protected Move Minimax(int depth)
     {
@@ -140,13 +162,11 @@ public class ComputerTurn extends AsyncTask<String, String, String> implements S
 
         if (difficulty == 0)
         {
-            // easy CPU chooses move randomly
             int num = (int)(moves.length * Math.random());
             selectedMove = moves[num];
         }
         else if (difficulty == 1)
         {
-            // medium CPU looks for most captures or kings
             selectedMove = moves[0];
 
             ArrayList<Move> selectedMoves = new ArrayList<>();
@@ -160,7 +180,6 @@ public class ComputerTurn extends AsyncTask<String, String, String> implements S
                     score += 2;
                 }
                 if (score > curScore) {
-                    //selectedMove = option;
                     selectedMoves.clear();
                     selectedMoves.add(option);
                     curScore = score;
@@ -179,7 +198,6 @@ public class ComputerTurn extends AsyncTask<String, String, String> implements S
         }
         else
         {
-            // sleep on easy/medium
             try {
                 Thread.sleep(1000);
             } catch (Exception e) {}
@@ -196,7 +214,6 @@ public class ComputerTurn extends AsyncTask<String, String, String> implements S
                 myGame.makeMove(selectedMove);
                 myActivity.prepTurn();
             } else {
-                // player wins
                 myActivity.statusText.setText("You won!");
                 wonStatus = true;
 

@@ -23,7 +23,9 @@ import fall2018.csc2017.slidingtiles.draughts.game.Position;
  * https://github.com/gregtour/CheckersAndroid
  */
 public class CheckersLayout extends TableLayout implements Serializable {
-
+    /**
+     * Checks the image view for the checkers game.
+     */
     public class CheckerImageView extends AppCompatImageView {
         public int x;
         public int y;
@@ -32,10 +34,24 @@ public class CheckersLayout extends TableLayout implements Serializable {
         }
     }
 
+    /**
+     * The corresponding checkers game activity for the checkers game layout.
+     */
     protected MyCheckersActivity myActivity;
+
+    /**
+     * The corresponding checkers game for the checkers game layout.
+     */
     protected CheckersGame myGame;
+
+    /**
+     * The cells of the checkers board.
+     */
     protected CheckerImageView cells[][];
 
+    /**
+     * Executes proper activity when a checkerboard cell is clicked.
+     */
     private final OnClickListener CellClick = new OnClickListener() {
         @Override
         public void onClick(View _view) {
@@ -57,7 +73,6 @@ public class CheckersLayout extends TableLayout implements Serializable {
                     if (piece != null) {
                         int color = piece.getColor();
                         boolean king = piece.isKing();
-                        // set the correct image
                         if (color == CheckersGame.RED) {
                             if (king) {
                                 cell.setImageResource(R.drawable.maroonupgraded);
@@ -71,14 +86,12 @@ public class CheckersLayout extends TableLayout implements Serializable {
                                 cell.setImageResource(R.drawable.black);
                             }
                         }
-                        // set the background color
                         if (myActivity.isSelected(piece)) {
                             cell.setBackgroundColor(getResources().getColor(R.color.cellSelect));
                         } else {
                             cell.setBackgroundColor(getResources().getColor(R.color.blackSquare));
                         }
                     } else {
-                        // clear the image
                         cell.setImageDrawable(null);
                         Position curPos = new Position(x, y);
                         if (myActivity.isOption(curPos) /* && highlightsEnabled */) {
@@ -92,7 +105,7 @@ public class CheckersLayout extends TableLayout implements Serializable {
     }
 
     /**
-     * display the board layout
+     * Displays the board layout.
      *
      * @param game the existing CheckersGame object
      * @param activity the existing MyCheckersActivity object
@@ -120,7 +133,6 @@ public class CheckersLayout extends TableLayout implements Serializable {
         setLayoutParams(params);
         setBackgroundColor(Color.rgb(48, 48, 48));
 
-        // add table of image views
         cells = new CheckerImageView[8][8];
         for (int y = 0; y < 8; y++) {
             TableRow row = new TableRow(activity);
@@ -146,7 +158,6 @@ public class CheckersLayout extends TableLayout implements Serializable {
 
                 int bgColor;
                 if (myBoard.isGameSquare(x,y)) {
-                    // add click handler
                     cell.setOnClickListener(CellClick);
                     bgColor = getResources().getColor(R.color.blackSquare);
                 }
