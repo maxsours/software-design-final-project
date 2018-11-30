@@ -335,9 +335,5 @@ public class ActualStartingActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public User getActiveUser(){
-        return this.activeUser;
-    }
-
 }
 
