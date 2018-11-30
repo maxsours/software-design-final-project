@@ -21,10 +21,11 @@ conditions.
 	Once the app has been configured by above steps, the app may run. When the app runs, the 
 	Game Launch Centre page will appear. Here the user has several features, listed below: 
 ### Game Centre
-- **HIGH SCORE** - This button will handles the per-user score. Pressing this button will show 
-     ​    the best score for each game. For example, in our game center we implemented 3 games,
-     ​    Draughts, 2048 and Sliding Tiles, pressing this button will show the best scores achieved
-         for the three games. It will not show how you perform against other users.
+- **HIGH SCORE** - This button will handles the score of each games related to the user.
+         Pressing this button will show the best score for each game. For example, in our game 
+         center we implemented 3 games, Draughts, 2048 and Sliding Tiles, pressing this button will 
+         show the best scores achieved for the three games. It will not show how you perform against
+         other users.
 - **CREATE ACCOUNT** - There are 2 text fields which allow user to type their username and password.
      ​    When the "CREATE ACCOUNT" button is pressed, and the username already exist,
      ​    a pop up text "User Already Exists" will appear. If new account is
@@ -65,14 +66,6 @@ conditions.
      ​    the file and present it to the user. If no games have been played prior to this button
          being pressed, a puzzle game with the default parameters listed in "NEW GAME" will
          appear for the user to play.               
-- **HIGH SCORE** - Pressing this button will show the user the per-game score. It will show the top 
-     ​    5 scores for each complexity, where the score is measured based on the total 
-     ​    number of steps to solve the puzzle. The fewer the total number of steps taken, 
-     ​    the higher the ranking. If the player never played the game before, then it will
-     ​    show "No record found for puzzle complexity)". Each user only can view his/her 
-     ​    score and the user's score will not be compared against other users. Assuming 
-     ​    the user never login and plays the game, then all the scores will be save under 
-     ​    the username "Guest". 
 
 - **Auto Save** - In addition to the save Button, we've implemented the feature that the game 
      ​    will auto save the game every 3 moves (not counting undos). The type of data saved
