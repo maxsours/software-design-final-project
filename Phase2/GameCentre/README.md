@@ -90,6 +90,7 @@ conditions.
     
     "Allow any move" the default setting is off so you must make the largest move possible,
     selecting this option will make it so you can do any legal move.    
+- **Auto Save** - Automatically saves after every move.
 
 After clicking the button on the game centre labeled 2048, here are the features:
 ### 2048
