@@ -306,9 +306,9 @@ public class GameActivity extends AppCompatActivity implements Observer {
             Date date = new Date();
             String dateToday = formatter.format(date);
 
-            score = new Score(username, boardManager.getBoard().getTotalMove(), puzzleSize, dateToday);
+            score = new SlidingTilesScore(username, boardManager.getBoard().getTotalMove(), puzzleSize, dateToday);
             loadScoreFromFile(fileName);
-            compareScore(score,score.getPuzzleSize());
+            compareScore(score,((SlidingTilesScore)score).getPuzzleSize());
             ObjectOutputStream outputStream = new ObjectOutputStream(
                     this.openFileOutput(fileName, MODE_PRIVATE));
             outputStream.writeObject(scoreList);
@@ -363,7 +363,7 @@ public class GameActivity extends AppCompatActivity implements Observer {
                         scoreList.set(counter, temp.get(tempCounter));
                         tempCounter++;
                     }else{
-                        scoreList.set(counter, new Score(username,0,3, ""));
+                        scoreList.set(counter, new SlidingTilesScore(username,0,3, ""));
                     }
                 }
                 break;
@@ -379,7 +379,7 @@ public class GameActivity extends AppCompatActivity implements Observer {
                         scoreList.set(counter, temp.get(tempCounter));
                         tempCounter++;
                     }else{
-                        scoreList.set(counter, new Score(username,0,4, ""));
+                        scoreList.set(counter, new SlidingTilesScore(username,0,4, ""));
                     }
                 }
                 break;
@@ -395,7 +395,7 @@ public class GameActivity extends AppCompatActivity implements Observer {
                         scoreList.set(counter, temp.get(tempCounter));
                         tempCounter++;
                     }else{
-                        scoreList.set(counter, new Score(username,0,5, ""));
+                        scoreList.set(counter, new SlidingTilesScore(username,0,5, ""));
                     }
                 }
                 break;
@@ -425,7 +425,7 @@ public class GameActivity extends AppCompatActivity implements Observer {
             }else if (counter >=10 && counter < 15){
                 defaultPuzzleSize = 5;
             }
-            Score score = new Score (username,0,defaultPuzzleSize, "");
+            Score score = new SlidingTilesScore (username,0,defaultPuzzleSize, "");
             scoreList.add(score);
         }
     }

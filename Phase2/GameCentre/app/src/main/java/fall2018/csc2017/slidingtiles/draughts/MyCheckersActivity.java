@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 
+import fall2018.csc2017.slidingtiles.CheckersScore;
 import fall2018.csc2017.slidingtiles.GameActivity;
 import fall2018.csc2017.slidingtiles.R;
 import fall2018.csc2017.slidingtiles.Score;
@@ -78,19 +79,9 @@ public class MyCheckersActivity extends AppCompatActivity {
     private Score score;
 
     /**
-     * The active User currently playing checkers.
-     */
-    private User activeUser;
-
-    /**
      * The current user; the file containing the User's score.
      */
     private String currentUser, checkersScoreFile;
-
-    /**
-     * List of Users registered in GameCentre.
-     */
-    private ArrayList<User> users = new ArrayList<>(0);
 
     /**
      * Represents whether the user has made an initial move.
@@ -131,13 +122,7 @@ public class MyCheckersActivity extends AppCompatActivity {
     protected void onCreate(Bundle saved)
     {
         super.onCreate(saved);
-        activeUser = getUserFromUsername(getIntent().getStringExtra("activeUser"));
-
-        if(activeUser == null){
-            currentUser = "Guest";
-        }else{
-            currentUser = activeUser.getUsername();
-        }
+        loadLastUser();
 
         createGameBoard();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -457,7 +442,7 @@ public class MyCheckersActivity extends AppCompatActivity {
             Date date = new Date();
             String dateToday = formatter.format(date);
             checkersScoreFile = currentUser + SCORE_FILENAME_TEMPLATE;
-            score = new Score(currentUser, finalScore, difficulty, dateToday);
+            score = new CheckersScore(currentUser, finalScore, difficulty, dateToday);
             setDefaultValueForArray();
             loadScoreFromFile(checkersScoreFile);
             compareScore(score, difficulty, currentUser);
@@ -525,23 +510,6 @@ public class MyCheckersActivity extends AppCompatActivity {
     }
 
     /**
-     * Given a username, returns the user
-     *
-     * @param username the username
-     * @return the user with the input username
-     */
-    public User getUserFromUsername(String username){
-        if (username != null) {
-            for (User user : users) {
-                if (user.getUsername().equals(username)) {
-                    return user;
-                }
-            }
-        }
-        return null;
-    }
-
-    /**
      * Saves the currently active user.
      *
      * @param username the username of the user.
@@ -582,7 +550,7 @@ public class MyCheckersActivity extends AppCompatActivity {
                         scoreList.set(counter, temp.get(pointer));
                         pointer--;
                     }else{
-                        scoreList.set(counter, new Score(username,0,"Easy", ""));
+                        scoreList.set(counter, new CheckersScore(username,0,"Easy", ""));
                     }
                 }
                 break;
@@ -600,7 +568,7 @@ public class MyCheckersActivity extends AppCompatActivity {
                         scoreList.set(counter, temp.get(pointer));
                         pointer--;
                     }else{
-                        scoreList.set(counter, new Score(username,0,"Medium", ""));
+                        scoreList.set(counter, new CheckersScore(username,0,"Medium", ""));
                     }
                 }
                 break;
@@ -618,7 +586,7 @@ public class MyCheckersActivity extends AppCompatActivity {
                         scoreList.set(counter, temp.get(pointer));
                         pointer--;
                     }else{
-                        scoreList.set(counter, new Score(username,0,"Hard", ""));
+                        scoreList.set(counter, new CheckersScore(username,0,"Hard", ""));
                     }
                 }
                 break;
@@ -636,7 +604,7 @@ public class MyCheckersActivity extends AppCompatActivity {
                         scoreList.set(counter, temp.get(pointer));
                         pointer--;
                     }else{
-                        scoreList.set(counter, new Score(username,0,"Very Hard", ""));
+                        scoreList.set(counter, new CheckersScore(username,0,"Very Hard", ""));
                     }
                 }
                 break;
@@ -683,7 +651,7 @@ public class MyCheckersActivity extends AppCompatActivity {
             }else{
                 difficulty = "Very Hard";
             }
-            Score score = new Score (currentUser,0, difficulty, "");
+            Score score = new CheckersScore (currentUser,0, difficulty, "");
             scoreList.add(score);
         }
     }
@@ -752,4 +720,25 @@ public class MyCheckersActivity extends AppCompatActivity {
             Log.e("login activity", "File contained unexpected data type: " + e.toString());
         }
     }
+
+    /**
+     * load the current active user
+     */
+    private void loadLastUser(){
+        try {
+            InputStream inputStream = this.openFileInput(GameActivity.LAST_USER_FILE);
+            if (inputStream != null) {
+                ObjectInputStream input = new ObjectInputStream(inputStream);
+                 currentUser = (String) input.readObject();
+                inputStream.close();
+            }
+        } catch (FileNotFoundException e) {
+            Log.e("login activity", "File not found: " + e.toString());
+        } catch (IOException e) {
+            Log.e("login activity", "Can not read file: " + e.toString());
+        } catch (ClassNotFoundException e) {
+            Log.e("login activity", "File contained unexpected data type: " + e.toString());
+        }
+    }
+
 }

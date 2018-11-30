@@ -2,8 +2,6 @@ package fall2018.csc2017.slidingtiles;
 
 import java.io.Serializable;
 
-import fall2018.csc2017.slidingtiles.draughts.game.CheckersGame;
-
 /**
  * A GameCentre user
  */
@@ -11,7 +9,6 @@ public class User implements Serializable {
     private String username;
     private String password;
     private BoardManager boardManager; // a slidingtiles save
-    private CheckersGame checkersGame; // a checkers save
 
     public User(String username, String password) {
         this.username = username;
@@ -32,14 +29,6 @@ public class User implements Serializable {
 
     public void setBoardManager(BoardManager boardManager){
         this.boardManager = boardManager;
-    }
-
-    public CheckersGame getCheckersGame() {
-        return checkersGame;
-    }
-
-    public void setCheckersGame(CheckersGame checkersGame) {
-        this.checkersGame = checkersGame;
     }
 
     /**
