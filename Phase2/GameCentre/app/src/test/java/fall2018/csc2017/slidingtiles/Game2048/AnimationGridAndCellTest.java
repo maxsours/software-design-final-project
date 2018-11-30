@@ -4,8 +4,14 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
+/**
+ * Test of animation grid anc cells of 2048
+ */
 public class AnimationGridAndCellTest {
 
+    /**
+     * AnimationGrid for testing purposes
+     */
     AnimationGrid aGrid;
 
     /**
