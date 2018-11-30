@@ -23,9 +23,8 @@ conditions.
 ### Game Centre
 - **HIGH SCORE** - This button will handles the score of each games related to the user.
          Pressing this button will show the best score for each game. For example, in our game 
-         center we implemented 3 games, Draughts, 2048 and Sliding Tiles, pressing this button will 
-         show the best scores achieved for the three games. It will not show how you perform against
-         other users.
+         center we have 3 games Draughts, 2048, and Sliding Tiles, pressing this button will show the
+         best scores achieved for the three games. It will not show how you perform against other users.
 - **CREATE ACCOUNT** - There are 2 text fields which allow user to type their username and password.
      ​    When the "CREATE ACCOUNT" button is pressed, and the username already exist,
      ​    a pop up text "User Already Exists" will appear. If new account is
@@ -36,8 +35,8 @@ conditions.
      ​    Subsequently, a "LOG OUT" button will appear.In cases where the user decides not to 
      ​    login and play the game, then the user will be playing as "Guest".
      
-- **Game Launcher** - There are three buttons on the top of the screen, each game having their own
-         respective button. The buttons are labeled Sliding Tiles, Draughts and 2048 and when tapped
+- **Game Launcher** - There are four buttons on the top of the screen, each game having their own
+         respective button. The buttons are labeled Sliding Tiles, Draughts, 2048 and Blackjack when tapped
          will launch the game on the label.
      
     
