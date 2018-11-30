@@ -89,4 +89,31 @@ conditions.
 
 
 
+After clicking the button on the game centre labeled 2048, here are the features:
 ### 2048
+- **RESET** -
+    There is a reset button at the top right of the screen below "high score" that is yellow 
+    and has two arrows pointing towards each others tails. Tapping this button will clear 
+    the 2048 board and current score so you can begin the game again if desired or after
+    a game over (defined as not being able to make any more moves).
+    
+    Clicking reset when not in a game over state will result in a prompt to the screen asking 
+    "Are you sure you wish to reset the game?" and you must tap reset to confirm the reset. 
+    This is to guard against accidentally resetting the board. 
+    
+- **UNDO** -
+    To the left of the reset button there is a button of a curved arrow pointing to the left
+    that UNDOs the last swipe/action that player executed. This only works one time PER action.
+    After executing a swipe on the screen you can can undo the action you just did and no more.
+    
+    NOTE: You can even undo a RESET of the board.
+    
+- **SCORE** - 
+    There are two scores displayed at the top right of the screen. 
+    
+    "SCORE" - is the current score calculated by adding up the values of all the combinations 
+    you succeeded in constructing.
+    
+    "HIGH SCORE" - is the maximum score you have achieved throughout your 2048 career.
+
+
