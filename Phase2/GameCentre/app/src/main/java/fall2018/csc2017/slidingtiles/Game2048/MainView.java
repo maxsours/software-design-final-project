@@ -679,16 +679,4 @@ public class MainView extends View {
     private int centerText() {
         return (int) ((paint.descent() + paint.ascent()) / 2);
     }
-
-    /**
-     * Return true iff the player has lost
-     * @return true iff the player has lost
-     */
-    public boolean getHasLost(){
-        return this.hasLost;
-    }
-
-    public void setHasLost(){
-        this.hasLost = false;
-    }
 }
