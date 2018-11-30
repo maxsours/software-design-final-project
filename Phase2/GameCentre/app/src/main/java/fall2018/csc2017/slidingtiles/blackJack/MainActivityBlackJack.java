@@ -532,7 +532,7 @@ public class MainActivityBlackJack extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                if (postRoundBalance <= 0) {
+                if (postRoundBalance <= 49) {
                     lackBalanceAction();
                 }
 
