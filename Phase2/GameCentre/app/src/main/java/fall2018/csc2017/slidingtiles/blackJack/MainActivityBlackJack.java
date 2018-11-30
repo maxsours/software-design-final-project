@@ -556,6 +556,10 @@ public class MainActivityBlackJack extends AppCompatActivity {
 
     }
 
+    /**
+     * this is the method that closes the game once the user has run out of money,
+     * the game can no longer proceed if they have nothing to bet.
+     */
     private void lackBalanceAction() {
         AlertDialog.Builder dialogBuiler = new AlertDialog.Builder(MainActivityBlackJack.this);
         dialogBuiler.setMessage("You appear to be out of money, unfortunately the game can" +

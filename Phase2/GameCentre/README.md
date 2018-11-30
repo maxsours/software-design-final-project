@@ -121,4 +121,16 @@ After clicking the button on the game centre labeled 2048, here are the features
     
 - **Autosave** - After every action the game auto saves the board.
 
+###Black Jack
+- **GAME OVER** -
+    Upon losing all of the money given in the initial set up of the game, the user will
+    be prompted to leave the game which will then occur once they have accepted. The screen
+    is locked to prevent them from selecting anything except agreeing to this statement.
+
+- **SCORE** -
+    The Score of the game is how much money you can amass. In keeping with traditional
+    BlackJack criterion there is no upperbound with how much money you can earn and instead it
+    is rather a matter of how long you can play the game before losing the money or wishing
+    not to play the game any longer.
+
 
