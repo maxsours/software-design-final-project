@@ -11,6 +11,9 @@ import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.TestCase.assertTrue;
 
+/**
+ * Test for the non-animation grid, tiles and cells in 2048
+ */
 public class TileAndCellTest {
 
     /** The 2048 grid for testing */

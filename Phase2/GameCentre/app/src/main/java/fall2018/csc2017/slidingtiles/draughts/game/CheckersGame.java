@@ -78,6 +78,22 @@ public class CheckersGame implements Serializable {
     }
 
     /**
+     * Another constructor used for testing
+     * @param gameBoard the game board
+     * @param turn current player's turn
+     * @param over whether the game is over or not
+     * @param winner the winner (0 if none)
+     * @param allowAnyMove whether all moves are allowed
+     */
+    public CheckersGame(CheckerBoard gameBoard, int turn, boolean over, int winner, boolean allowAnyMove) {
+        this.gameBoard = gameBoard;
+        this.turn = turn;
+        this.over = over;
+        this.winner = winner;
+        this.allowAnyMove = allowAnyMove;
+    }
+
+    /**
      * Restarts the checker game being played.
      */
     public void restart() {
@@ -87,6 +103,18 @@ public class CheckersGame implements Serializable {
         winner = CheckersGame.NONE;
     }
 
+    /**
+     * Returns true iff any move is allowed
+     * @return true iff any move is allowed
+     */
+    public boolean getAllowAnyMove() {
+        return allowAnyMove;
+    }
+
+    /**
+     * Set the value of allowAnyMove
+     * @param anyMove new value of allowAnyMove
+     */
     public void setAnyMove(boolean anyMove) {
         allowAnyMove = anyMove;
     }
