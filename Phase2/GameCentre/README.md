@@ -77,10 +77,19 @@ conditions.
 
 ### Draughts
 
+- **RESET** - 
+    There is a reset button at the top right that has the image of a white star.
+    Tapping this button will reset the entire checkers board, reviving all captured
+    pieces on both sides and putting them in their beginning positions. 
 
-
-
-
+- **OPTIONS** - Beside the reset button there is a button that looks like a wrench.
+    Tapping this will allow you to change two settings.
+    
+    "Difficulty" which allows you to change the difficulty of the bot opponent
+    with options from easy to very hard.
+    
+    "Allow any move" the default setting is off so you must make the largest move possible,
+    selecting this option will make it so you can do any legal move.    
 
 After clicking the button on the game centre labeled 2048, here are the features:
 ### 2048
