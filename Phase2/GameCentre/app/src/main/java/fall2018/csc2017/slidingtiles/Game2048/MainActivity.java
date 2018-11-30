@@ -48,27 +48,17 @@ public class MainActivity extends AppCompatActivity {
     private MainView view;
 
     /**
-     * List of users
-     */
-    private ArrayList<User> users = new ArrayList<>(0);
-    /**
      * List of scores
      */
     private ArrayList<Score> scoreList = new ArrayList<>(5);
     private String currentUser; // string denoting the current user ("Guest" if not logged in)
-    private User activeUser; // the active user
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         view = new MainView(this);
 
-        activeUser = getUserFromUsername(getIntent().getStringExtra("activeUser"));
-        if (activeUser == null){
-            currentUser = "Guest";
-        }else{
-            currentUser = activeUser.getUsername();
-        }
+        loadLastUser();
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         view.hasSaveState = settings.getBoolean("save_state", false);
@@ -193,22 +183,6 @@ public class MainActivity extends AppCompatActivity {
         view.game.canUndo = settings.getBoolean(CAN_UNDO, view.game.canUndo);
         view.game.gameState = settings.getInt(GAME_STATE, view.game.gameState);
         view.game.lastGameState = settings.getInt(UNDO_GAME_STATE, view.game.lastGameState);
-    }
-
-    /**
-     * Given a username, return the user
-     * @param username the username
-     * @return the user with the input username
-     */
-    public User getUserFromUsername(String username){
-        if (username != null) {
-            for (User user : users) {
-                if (user.getUsername().equals(username)) {
-                    return user;
-                }
-            }
-        }
-        return null;
     }
 
     /**
@@ -337,7 +311,26 @@ public class MainActivity extends AppCompatActivity {
             }
             index ++;
         }
-        System.out.println("index is " + index);
         return index;
+    }
+
+    /**
+     * load the current active user
+     */
+    private void loadLastUser(){
+        try {
+            InputStream inputStream = this.openFileInput(GameActivity.LAST_USER_FILE);
+            if (inputStream != null) {
+                ObjectInputStream input = new ObjectInputStream(inputStream);
+                currentUser = (String) input.readObject();
+                inputStream.close();
+            }
+        } catch (FileNotFoundException e) {
+            Log.e("login activity", "File not found: " + e.toString());
+        } catch (IOException e) {
+            Log.e("login activity", "Can not read file: " + e.toString());
+        } catch (ClassNotFoundException e) {
+            Log.e("login activity", "File contained unexpected data type: " + e.toString());
+        }
     }
 }
