@@ -16,9 +16,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Locale;
 
-
+/**
+ * this is the main class that all of Black Jacks activities are run from
+ */
 public class MainActivityBlackJack extends AppCompatActivity {
-
+    /**
+     * this is an array array of the cards and their corresponding black jack values
+     */
     int[][] cards = {{R.drawable.card_1, 2}, {R.drawable.card_14, 2}, {R.drawable.card_27, 2}, {R.drawable.card_40, 2},
             {R.drawable.card_2, 3}, {R.drawable.card_15, 3}, {R.drawable.card_28, 3}, {R.drawable.card_41, 3},
             {R.drawable.card_3, 4}, {R.drawable.card_16, 4}, {R.drawable.card_29, 4}, {R.drawable.card_42, 4},
@@ -33,7 +37,10 @@ public class MainActivityBlackJack extends AppCompatActivity {
             {R.drawable.card_12, 10}, {R.drawable.card_25, 10}, {R.drawable.card_38, 10}, {R.drawable.card_51, 10},
             {R.drawable.card_13, 11}, {R.drawable.card_26, 11}, {R.drawable.card_39, 11}, {R.drawable.card_52, 11}};
 
-
+    /**
+     * this is the method that creates the the game
+     * @param savedInstanceState this is the referrence to the bundle that creats
+     */
     @Override
 
     public void onCreate(Bundle savedInstanceState) {
