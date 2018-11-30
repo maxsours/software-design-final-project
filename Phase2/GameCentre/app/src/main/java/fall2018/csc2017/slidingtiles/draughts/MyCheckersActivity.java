@@ -79,19 +79,9 @@ public class MyCheckersActivity extends AppCompatActivity {
     private Score score;
 
     /**
-     * The active User currently playing checkers.
-     */
-    private User activeUser;
-
-    /**
      * The current user; the file containing the User's score.
      */
     private String currentUser, checkersScoreFile;
-
-    /**
-     * List of Users registered in GameCentre.
-     */
-    private ArrayList<User> users = new ArrayList<>(0);
 
     /**
      * Represents whether the user has made an initial move.
@@ -132,13 +122,7 @@ public class MyCheckersActivity extends AppCompatActivity {
     protected void onCreate(Bundle saved)
     {
         super.onCreate(saved);
-        activeUser = getUserFromUsername(getIntent().getStringExtra("activeUser"));
-
-        if(activeUser == null){
-            currentUser = "Guest";
-        }else{
-            currentUser = activeUser.getUsername();
-        }
+        loadLastUser();
 
         createGameBoard();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -526,23 +510,6 @@ public class MyCheckersActivity extends AppCompatActivity {
     }
 
     /**
-     * Given a username, returns the user
-     *
-     * @param username the username
-     * @return the user with the input username
-     */
-    public User getUserFromUsername(String username){
-        if (username != null) {
-            for (User user : users) {
-                if (user.getUsername().equals(username)) {
-                    return user;
-                }
-            }
-        }
-        return null;
-    }
-
-    /**
      * Saves the currently active user.
      *
      * @param username the username of the user.
@@ -753,4 +720,25 @@ public class MyCheckersActivity extends AppCompatActivity {
             Log.e("login activity", "File contained unexpected data type: " + e.toString());
         }
     }
+
+    /**
+     * load the current active user
+     */
+    private void loadLastUser(){
+        try {
+            InputStream inputStream = this.openFileInput(GameActivity.LAST_USER_FILE);
+            if (inputStream != null) {
+                ObjectInputStream input = new ObjectInputStream(inputStream);
+                 currentUser = (String) input.readObject();
+                inputStream.close();
+            }
+        } catch (FileNotFoundException e) {
+            Log.e("login activity", "File not found: " + e.toString());
+        } catch (IOException e) {
+            Log.e("login activity", "Can not read file: " + e.toString());
+        } catch (ClassNotFoundException e) {
+            Log.e("login activity", "File contained unexpected data type: " + e.toString());
+        }
+    }
+
 }
