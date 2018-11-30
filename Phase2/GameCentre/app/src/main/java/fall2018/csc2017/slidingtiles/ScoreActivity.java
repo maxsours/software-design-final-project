@@ -59,6 +59,9 @@ public class ScoreActivity extends AppCompatActivity {
                         scoreTextMessage.setText("No record found for Sliding Tile");
                     }else{
                         StringBuilder text = new StringBuilder();
+                        text.append("User: ");
+                        text.append(lastUser);
+                        text.append("\n\n");
 
                         text.append(getResources().getString(R.string.size_3_title));
                         text.append("\n");
@@ -88,6 +91,10 @@ public class ScoreActivity extends AppCompatActivity {
                         scoreTextMessage.setText("No record found for Checkers");
                     }else{
                         StringBuilder text = new StringBuilder();
+                        text.append("User: ");
+                        text.append(lastUser);
+                        text.append("\n\n");
+
                         text.append(appendCheckerScore(0,5));
                         text.append("\n");
                         text.append(appendCheckerScore(5,10));
@@ -101,14 +108,19 @@ public class ScoreActivity extends AppCompatActivity {
                     return true;
 
                 case R.id.navigation_notifications:
-                    path = lastUser + "_blackjack_score_save_file.ser";
+                    path = lastUser + "_2048_score_save_file.ser";
                     scoreFileExist = false;
                     loadScoreFromFile(path);
                     mTextMessage.setTextSize(15);
                     if(!scoreFileExist){
-                        scoreTextMessage.setText("No record found for Checkers");
+                        scoreTextMessage.setText("No record found for 2048");
                     }else{
+
                         StringBuilder text = new StringBuilder();
+                        text.append("User: ");
+                        text.append(lastUser);
+                        text.append("\n\n");
+                        text.append(append2048Score());
 
                         scoreTextMessage.setText(text);
                     }
@@ -174,7 +186,7 @@ public class ScoreActivity extends AppCompatActivity {
     }
 
     /**
-     * Append the scores in proper format before displaying them on the activity
+     * Append the scores for sliding tiles in proper format before displaying them on the activity
      *
      * @param start the beginning of the score section we want to append score to.
      * @param end the end of the score section we want to append score to.
@@ -184,33 +196,60 @@ public class ScoreActivity extends AppCompatActivity {
         StringBuilder scoreDetails = new StringBuilder();
         for(int counter = start; counter < end; counter ++){
             if(scoreList.get(counter).getScore() != 0){
-                scoreDetails.append(scoreList.get(counter).getUser());
-                scoreDetails.append("\t\t\t\t\t\t");
+
+                scoreDetails.append(scoreList.get(counter).getDate());
+                scoreDetails.append("\t\t");
                 scoreDetails.append(Integer.toString(scoreList.get(counter).getScore()));
                 scoreDetails.append(" moves");
-                scoreDetails.append("\t\t\t\t\t\t");
-                scoreDetails.append(scoreList.get(counter).getDate());
                 scoreDetails.append("\n");
             }
         }
         return scoreDetails;
     }
 
+    /**
+     * Append the scores for checkers in proper format before displaying them on the activity
+     *
+     * @param start the beginning of the score section we want to append score to.
+     * @param end the end of the score section we want to append score to.
+     * @return the scores that need to be displayed on the app
+     */
     public StringBuilder appendCheckerScore(int start, int end){
         StringBuilder scoreDetails = new StringBuilder();
+
         for(int counter = start; counter < end; counter ++){
             if(scoreList.get(counter).getScore() != 0){
-                scoreDetails.append(scoreList.get(counter).getUser());
-                scoreDetails.append("\t\t\t\t");
-                scoreDetails.append(Integer.toString(scoreList.get(counter).getScore()));
-                scoreDetails.append("\t\t\t\t");
+
                 scoreDetails.append((scoreList.get(counter).getDifficulty()));
-                scoreDetails.append("\t\t\t\t");
+                scoreDetails.append("\t\t\t\t\t");
                 scoreDetails.append(scoreList.get(counter).getDate());
+                scoreDetails.append("\t\t");
+                scoreDetails.append(Integer.toString(scoreList.get(counter).getScore()));
                 scoreDetails.append("\n");
             }
         }
         System.out.println(scoreDetails);
+        return scoreDetails;
+    }
+
+    /**
+     * Append the scores for 2048 in proper format before displaying them on the activity
+     *
+     * @return the scores that need to be displayed on the app
+     */
+    public StringBuilder append2048Score(){
+        StringBuilder scoreDetails = new StringBuilder();
+
+        for(Score score : scoreList){
+            if(score.getScore() != 0){
+
+                scoreDetails.append(score.getDate());
+                scoreDetails.append("\t\t");
+
+                scoreDetails.append(Integer.toString(score.getScore()));
+                scoreDetails.append("\n");
+            }
+        }
         return scoreDetails;
     }
 

@@ -9,14 +9,23 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.util.DisplayMetrics;
 
+import java.io.Serializable;
+
 import fall2018.csc2017.slidingtiles.R;
 import fall2018.csc2017.slidingtiles.draughts.game.CheckerBoard;
 import fall2018.csc2017.slidingtiles.draughts.game.CheckersGame;
 import fall2018.csc2017.slidingtiles.draughts.game.Piece;
 import fall2018.csc2017.slidingtiles.draughts.game.Position;
 
-public class CheckersLayout extends TableLayout {
-
+/**
+ * The layout for a checkers game.
+ * Adapted on 2018/11/15 from an openly available applet by Greg Tour:
+ * https://github.com/gregtour/CheckersAndroid
+ */
+public class CheckersLayout extends TableLayout implements Serializable {
+    /**
+     * Checks the image view for the checkers game.
+     */
     public class CheckerImageView extends AppCompatImageView {
         public int x;
         public int y;
@@ -25,10 +34,24 @@ public class CheckersLayout extends TableLayout {
         }
     }
 
+    /**
+     * The corresponding checkers game activity for the checkers game layout.
+     */
     protected MyCheckersActivity myActivity;
+
+    /**
+     * The corresponding checkers game for the checkers game layout.
+     */
     protected CheckersGame myGame;
+
+    /**
+     * The cells of the checkers board.
+     */
     protected CheckerImageView cells[][];
 
+    /**
+     * Executes proper activity when a checkerboard cell is clicked.
+     */
     private final OnClickListener CellClick = new OnClickListener() {
         @Override
         public void onClick(View _view) {
@@ -37,6 +60,9 @@ public class CheckersLayout extends TableLayout {
         }
     };
 
+    /**
+     *  refresh the position/layout of every checker piece
+     */
     public void refresh() {
         CheckerBoard myBoard = myGame.getBoard();
         for (int x = 0; x < 8; x++) {
@@ -47,7 +73,6 @@ public class CheckersLayout extends TableLayout {
                     if (piece != null) {
                         int color = piece.getColor();
                         boolean king = piece.isKing();
-                        // set the correct image
                         if (color == CheckersGame.RED) {
                             if (king) {
                                 cell.setImageResource(R.drawable.maroonupgraded);
@@ -61,14 +86,12 @@ public class CheckersLayout extends TableLayout {
                                 cell.setImageResource(R.drawable.black);
                             }
                         }
-                        // set the background color
                         if (myActivity.isSelected(piece)) {
                             cell.setBackgroundColor(getResources().getColor(R.color.cellSelect));
                         } else {
                             cell.setBackgroundColor(getResources().getColor(R.color.blackSquare));
                         }
                     } else {
-                        // clear the image
                         cell.setImageDrawable(null);
                         Position curPos = new Position(x, y);
                         if (myActivity.isOption(curPos) /* && highlightsEnabled */) {
@@ -81,6 +104,12 @@ public class CheckersLayout extends TableLayout {
         }
     }
 
+    /**
+     * Displays the board layout.
+     *
+     * @param game the existing CheckersGame object
+     * @param activity the existing MyCheckersActivity object
+     */
     public CheckersLayout(CheckersGame game, MyCheckersActivity activity) {
         super(activity);
         myActivity = activity;
@@ -104,7 +133,6 @@ public class CheckersLayout extends TableLayout {
         setLayoutParams(params);
         setBackgroundColor(Color.rgb(48, 48, 48));
 
-        // add table of image views
         cells = new CheckerImageView[8][8];
         for (int y = 0; y < 8; y++) {
             TableRow row = new TableRow(activity);
@@ -130,7 +158,6 @@ public class CheckersLayout extends TableLayout {
 
                 int bgColor;
                 if (myBoard.isGameSquare(x,y)) {
-                    // add click handler
                     cell.setOnClickListener(CellClick);
                     bgColor = getResources().getColor(R.color.blackSquare);
                 }

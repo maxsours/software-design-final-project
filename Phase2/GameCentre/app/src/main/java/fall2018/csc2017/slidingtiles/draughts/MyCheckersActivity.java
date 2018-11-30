@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,44 +30,118 @@ import fall2018.csc2017.slidingtiles.GameActivity;
 import fall2018.csc2017.slidingtiles.R;
 import fall2018.csc2017.slidingtiles.Score;
 import fall2018.csc2017.slidingtiles.User;
-import fall2018.csc2017.slidingtiles.draughts.game.Board;
+import fall2018.csc2017.slidingtiles.draughts.game.CheckerBoard;
 import fall2018.csc2017.slidingtiles.draughts.game.CheckersGame;
 import fall2018.csc2017.slidingtiles.draughts.game.Move;
 import fall2018.csc2017.slidingtiles.draughts.game.Piece;
 import fall2018.csc2017.slidingtiles.draughts.game.Position;
 
-
+/**
+ * The checkers game's activity.
+ * Adapted on 2018/11/15 from an openly available applet by Greg Tour:
+ * https://github.com/gregtour/CheckersAndroid
+ */
 public class MyCheckersActivity extends AppCompatActivity {
+    /**
+     * The Checkers Game being played.
+     */
     private CheckersGame gamelogic;
+
+    /**
+     * The Layout of the checkers game.
+     */
     private CheckersLayout checkersView;
+
+    /**
+     * The current status of the checkers game being played.
+     */
     public TextView statusText;
 
+    /**
+     * The difficulty of the checkers game being played.
+     */
     private String prefDifficulty;
+
+    /**
+     * Whether any move is permitted in the game currently being played.
+     */
     private boolean prefAllowAnyMove;
+
+    /**
+     * The list of checkers game scores.
+     */
     private ArrayList <Score> scoreList = new ArrayList<>(20);
+
+    /**
+     * A checker game's score.
+     */
     private Score score;
+
+    /**
+     * The active User currently playing checkers.
+     */
     private User activeUser;
+
+    /**
+     * The current user; the file containing the User's score.
+     */
+    private String currentUser, checkersScoreFile;
+
+    /**
+     * List of Users registered in GameCentre.
+     */
     private ArrayList<User> users = new ArrayList<>(0);
+
+    /**
+     * Represents whether the user has made an initial move.
+     */
     private int stepTaken = 0;
+
+    /**
+     * The starting time for a checkers game.
+     */
     private double startTime;
+
+    /**
+     * Whether the currently played checkers game has been won.
+     */
     private boolean winStatus = false;
 
+    /**
+     * A string representation of the current game difficulty.
+     */
     private static final String DIFFICULTY = "pref_difficulty";
+
+    /**
+     * A string representation of whether any move is permitted in the currently played game.
+     */
     private static final String ANY_MOVE = "pref_any_move";
+
+    /**
+     * The checkers game score save file.
+     */
     private final String SCORE_FILENAME_TEMPLATE = "_checkers_score_save_file.ser";
-    private static String checkersScoreFile ;
+
+    /**
+     * The checkers game save file.
+     */
+    private final String CHECKERS_SAVE_FILE = "_checkers_save_file.ser";
 
     @Override
     protected void onCreate(Bundle saved)
     {
         super.onCreate(saved);
-        createGameBoard();
-        // portrait only
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        //
-        ////PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-        //
         activeUser = getUserFromUsername(getIntent().getStringExtra("activeUser"));
+
+        if(activeUser == null){
+            currentUser = "Guest";
+        }else{
+            currentUser = activeUser.getUsername();
+        }
+
+        createGameBoard();
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.registerOnSharedPreferenceChangeListener(preferencesChangeListener);
         prefDifficulty = sharedPreferences.getString(DIFFICULTY, "Easy");
@@ -79,7 +154,6 @@ public class MyCheckersActivity extends AppCompatActivity {
         prepTurn();
     }
 
-    // show menu with settings icon
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
@@ -87,7 +161,6 @@ public class MyCheckersActivity extends AppCompatActivity {
         return true;
     }
 
-    // display SettingsActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -104,7 +177,7 @@ public class MyCheckersActivity extends AppCompatActivity {
                 break;
             case R.id.about_menu_icon:
                 AlertDialog dialog = new AlertDialog.Builder(this)
-                        .setMessage("Checkers Game PopUp")
+                        .setMessage("CHECKERS")
                         .setCancelable(false)
                         .setPositiveButton("Okay", null)
                         .create();
@@ -114,9 +187,12 @@ public class MyCheckersActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Creates a new checkers board.
+     */
     private void createGameBoard()
     {
-        gamelogic = new CheckersGame(prefAllowAnyMove);
+        loadFromFile(currentUser + CHECKERS_SAVE_FILE);
 
         LinearLayout rootLayout = new LinearLayout(this);
         rootLayout.setOrientation(LinearLayout.VERTICAL);
@@ -137,6 +213,9 @@ public class MyCheckersActivity extends AppCompatActivity {
         setContentView(rootLayout);
     }
 
+    /**
+     * Stops the automated opponent algorithm from continuing handling tasks.
+     */
     public void clearComputerTask() {
         if (computerTask != null) {
             if (computerTask.getStatus() != AsyncTask.Status.FINISHED)
@@ -147,24 +226,48 @@ public class MyCheckersActivity extends AppCompatActivity {
         }
     }
 
-    // restart game
+    /**
+     * Restarts the checkers game.
+     */
     private void restart() {
+        File file = getFileStreamPath(currentUser+ CHECKERS_SAVE_FILE);
+        file.delete();
         clearComputerTask();
         gamelogic.restart();
         checkersView.refresh();
         prepTurn();
     }
 
+    /**
+     * The currently selected piece in the game.
+     */
     Piece selectedPiece;
+
+    /**
+     * The selected position to be played upon in the game.
+     */
     Position selectedPosition;
+
+    /**
+     * Pieces that can currently be selected to be played within the checkers game.
+     */
     Piece selectablePieces[];
+
+    /**
+     * List of possible moves to be played within the checkers game.
+     */
     Position moveOptions[];
 
+    /**
+     * Whether it is the computers turn to play.
+     */
     ComputerTurn computerTask = null;
 
-    // prepare a human or computer turn
+    /**
+     * Prepares a human or computer turn.
+     */
     public void prepTurn() {
-        Board board = gamelogic.getBoard();
+        CheckerBoard board = gamelogic.getBoard();
 
         selectedPiece = null;
         selectedPosition = null;
@@ -178,17 +281,14 @@ public class MyCheckersActivity extends AppCompatActivity {
         if (turn == CheckersGame.RED) {
             statusText.setText("Red's (computer's) turn. Difficulty: "+prefDifficulty);
 
-            // run the CPU AI on another thread
             computerTask = new ComputerTurn(this, gamelogic, prefDifficulty, prefAllowAnyMove);
             computerTask.execute();
 
         } else if (turn == CheckersGame.BLACK) {
             statusText.setText("Black's (player's) turn.");
-            // prep for human player turn
             ArrayList<Piece> selectablePieces = new ArrayList<>();
             Move moves[] = gamelogic.getMoves();
 
-            // find pieces which can be moved
             for (Move move : moves) {
                 Piece newPiece = board.getPiece(move.start());
                 if (!selectablePieces.contains(newPiece)) {
@@ -196,7 +296,6 @@ public class MyCheckersActivity extends AppCompatActivity {
                 }
             }
 
-            // convert to array
             this.selectablePieces = selectablePieces.toArray(
                     new Piece[selectablePieces.size()]
             );
@@ -208,20 +307,29 @@ public class MyCheckersActivity extends AppCompatActivity {
             stepTaken++;
             if(stepTaken == 1){
                 startTime = System.currentTimeMillis();
-                System.out.println("Startime hereeeeeeeeeeeeee is " + startTime);
             }
-
         }
 
         checkersView.refresh();
     }
 
-    // check which piece is selected
+    /**
+     * Whether a piece has been selected
+     *
+     * @param piece a piece that potentially was selected
+     * @return whether a piece has been selected
+     */
     public boolean isSelected(Piece piece) {
         return (piece != null && piece == selectedPiece);
     }
 
-    // check which squares are options
+    /**
+     * Returns whether the selected piece to move is at the edge of the board.
+     *
+     * @param checkPosition checks whether the selected piece to move is at the edge of the board.
+     *
+     * @return whether the selected piece to move is at the edge of the board.
+     */
     public boolean isOption(Position checkPosition) {
         if (moveOptions == null) {
             return false;
@@ -234,6 +342,12 @@ public class MyCheckersActivity extends AppCompatActivity {
         return false;
     }
 
+    /**
+     * Determines all possilble moves for the selected piece
+     *
+     * @param piece the selected piece
+     * @param location the location of the selected checker piece
+     */
     public void selectPiece(Piece piece, Position location)
     {
         selectedPiece = null;
@@ -254,13 +368,10 @@ public class MyCheckersActivity extends AppCompatActivity {
                 selectedPiece = piece;
                 selectedPosition = location;
 
-                // fill move options
-
                 ArrayList<Position> moveOptionsArr = new ArrayList<>();
 
                 Move allMoves[] = gamelogic.getMoves();
 
-                // iterate through moves
                 for (Move checkMove : allMoves) {
                     Position start = checkMove.start();
                     Position end = checkMove.end();
@@ -272,7 +383,6 @@ public class MyCheckersActivity extends AppCompatActivity {
                     }
                 }
 
-                // save list results
                 moveOptions = moveOptionsArr.toArray(new Position[moveOptionsArr.size()]);
             }
         }
@@ -280,28 +390,35 @@ public class MyCheckersActivity extends AppCompatActivity {
         checkersView.refresh();
     }
 
-    // player made a move
+    /**
+     * Makes the move the User has chosen.
+     *
+     * @param destination the position the piece is intended to go to.
+     */
     public void makeMove(Position destination)
     {
-        // make longest move available
+
         Move move = gamelogic.getLongestMove(selectedPosition, destination);
         if (move != null) {
             gamelogic.makeMove(move);
             prepTurn();
+            saveToFile(currentUser + CHECKERS_SAVE_FILE);
         }
     }
 
-    // player makes a click
+    /**
+     * Responds to when a player clicks on an area on the board.
+     *
+     * @param x the row position of the clicked area
+     * @param y the column position of the clicked area
+     */
     public void onClick(int x, int y) {
-        // check if its player's turn
         if (gamelogic.whoseTurn() != CheckersGame.BLACK) {
             return;
         }
 
         Position location = new Position(x, y);
         Piece targetPiece = gamelogic.getBoard().getPiece(x, y);
-
-        // attempting to make a move
         if (selectedPiece != null && selectedPosition != null && targetPiece == null) {
             makeMove(location);
         }
@@ -311,11 +428,13 @@ public class MyCheckersActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Updates the checker game's chosen preferences.
+     */
     private SharedPreferences.OnSharedPreferenceChangeListener preferencesChangeListener =
             new SharedPreferences.OnSharedPreferenceChangeListener() {
                 @Override
                 public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-                    // update preferences
                     prefDifficulty = sharedPreferences.getString(DIFFICULTY, "Easy");
                     prefAllowAnyMove = sharedPreferences.getBoolean(ANY_MOVE, true);
 
@@ -325,34 +444,35 @@ public class MyCheckersActivity extends AppCompatActivity {
                 }
             };
 
-    public void saveScoreToFile(User activeUser, int finalScore, String difficulty){
+    /**
+     * Saves the checker game's final score into the save file.
+     *
+     * @param finalScore the calculated final score after the player wins.
+     * @param difficulty the difficulty of AI the player decided to play with.
+     */
+    public void saveScoreToFile( int finalScore, String difficulty){
         try {
-            String username;
-            if(activeUser == null){
-                username = "Guest";
-            }else{
-                username = activeUser.getUsername();
-            }
+
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
             Date date = new Date();
             String dateToday = formatter.format(date);
-            checkersScoreFile = username + SCORE_FILENAME_TEMPLATE;
-            score = new Score(username, finalScore, difficulty, dateToday);
+            checkersScoreFile = currentUser + SCORE_FILENAME_TEMPLATE;
+            score = new Score(currentUser, finalScore, difficulty, dateToday);
             setDefaultValueForArray();
             loadScoreFromFile(checkersScoreFile);
-            compareScore(score, difficulty, username);
+            compareScore(score, difficulty, currentUser);
             ObjectOutputStream outputStream = new ObjectOutputStream(
                     this.openFileOutput(checkersScoreFile, MODE_PRIVATE));
             outputStream.writeObject(scoreList);
             outputStream.close();
-            saveLastUser(username);
+            saveLastUser(currentUser);
         } catch (IOException e) {
             Log.e("Exception", "File write failed: " + e.toString());
         }
     }
 
     /**
-     * get the list of score
+     * Opens the list of checkers scores to be modified or read in within a file.
      *
      * @param fileName name of the file
      */
@@ -373,6 +493,17 @@ public class MyCheckersActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Calculates the final score of the checkers game
+     * (Note to Reader: It produces a score by taking the ceiling function of the following formula:
+     * finalScore = (int) Math.ceil((100000 * difficultyScore)/timeTaken);)
+     *
+     *
+     * @param difficulty of the game played
+     * @param endTime when does the player win the game
+     * @param startTime when does the player made the first move
+     * @return final score obtained by the player
+     */
     private int calculateFinalScore(String difficulty, double endTime, double startTime){
         int finalScore, difficultyScore;
         double timeTaken;
@@ -390,14 +521,12 @@ public class MyCheckersActivity extends AppCompatActivity {
         timeTaken = ( endTime - startTime)/600000;
         finalScore = (int) Math.ceil((100000 * difficultyScore)/timeTaken);
 
-        System.out.println("timeTaken " + timeTaken);
-        System.out.println("finalScore " + finalScore);
-
         return finalScore;
     }
 
     /**
-     * Given a username, return the user
+     * Given a username, returns the user
+     *
      * @param username the username
      * @return the user with the input username
      */
@@ -413,7 +542,7 @@ public class MyCheckersActivity extends AppCompatActivity {
     }
 
     /**
-     * Save the currently active user.
+     * Saves the currently active user.
      *
      * @param username the username of the user.
      */
@@ -430,13 +559,14 @@ public class MyCheckersActivity extends AppCompatActivity {
     }
 
     /**
-     * sort all the scores according to its puzzle size and score
+     * Sorts all the checkers game scores according to their difficulty and score.
      *
-     * @param other the other score to add.
+     * @param other the score to add.
      */
     private void compareScore(Score other, String difficulty, String username){
         ArrayList<Score> temp = new ArrayList<>();
         int tempCounter;
+        int pointer;
         switch(difficulty){
             case "Easy":
                 for(int  counter = 0; counter < 5; counter ++){
@@ -445,12 +575,14 @@ public class MyCheckersActivity extends AppCompatActivity {
                 temp.add(other);
                 Collections.sort(temp);
                 tempCounter = searchNonZeroIndex(temp);
+
+                pointer = temp.size() -1 ;
                 for(int counter = 0; counter < 5; counter ++){
-                    if(tempCounter < temp.size()){
-                        scoreList.set(counter, temp.get(tempCounter));
-                        tempCounter++;
+                    if(tempCounter <= pointer){
+                        scoreList.set(counter, temp.get(pointer));
+                        pointer--;
                     }else{
-                        scoreList.set(counter, new Score(username,0, "Easy", ""));
+                        scoreList.set(counter, new Score(username,0,"Easy", ""));
                     }
                 }
                 break;
@@ -462,10 +594,11 @@ public class MyCheckersActivity extends AppCompatActivity {
                 temp.add(other);
                 Collections.sort(temp);
                 tempCounter = searchNonZeroIndex(temp);
-                for(int counter = 5; counter < 10; counter ++){
-                    if(tempCounter < temp.size()){
-                        scoreList.set(counter, temp.get(tempCounter));
-                        tempCounter++;
+                pointer = temp.size() -1 ;
+                for(int counter = 0; counter < 5; counter ++){
+                    if(tempCounter <= pointer){
+                        scoreList.set(counter, temp.get(pointer));
+                        pointer--;
                     }else{
                         scoreList.set(counter, new Score(username,0,"Medium", ""));
                     }
@@ -479,10 +612,11 @@ public class MyCheckersActivity extends AppCompatActivity {
                 temp.add(other);
                 Collections.sort(temp);
                 tempCounter = searchNonZeroIndex(temp);
-                for(int counter = 10; counter < 15; counter ++){
-                    if(tempCounter < temp.size()){
-                        scoreList.set(counter, temp.get(tempCounter));
-                        tempCounter++;
+                pointer = temp.size() -1 ;
+                for(int counter = 0; counter < 5; counter ++){
+                    if(tempCounter <= pointer){
+                        scoreList.set(counter, temp.get(pointer));
+                        pointer--;
                     }else{
                         scoreList.set(counter, new Score(username,0,"Hard", ""));
                     }
@@ -496,10 +630,11 @@ public class MyCheckersActivity extends AppCompatActivity {
                 temp.add(other);
                 Collections.sort(temp);
                 tempCounter = searchNonZeroIndex(temp);
-                for(int counter = 15; counter < 20; counter ++){
-                    if(tempCounter < temp.size()){
-                        scoreList.set(counter, temp.get(tempCounter));
-                        tempCounter++;
+                pointer = temp.size() -1 ;
+                for(int counter = 0; counter < 5; counter ++){
+                    if(tempCounter <= pointer){
+                        scoreList.set(counter, temp.get(pointer));
+                        pointer--;
                     }else{
                         scoreList.set(counter, new Score(username,0,"Very Hard", ""));
                     }
@@ -509,8 +644,9 @@ public class MyCheckersActivity extends AppCompatActivity {
     }
 
     /**
-     * determine the index in the scoreList where the score is != 0
-     * @param temp the scorelist.
+     * Determines the index in the scoreList where the score is != 0
+     *
+     * @param temp the list of scores.
      * @return the index where score is 0.
      */
     public int searchNonZeroIndex(ArrayList<Score> temp){
@@ -522,25 +658,20 @@ public class MyCheckersActivity extends AppCompatActivity {
             }
             index ++;
         }
-        System.out.println("index is " + index);
         return index;
     }
 
     /**
-     * initialize the scoreList if the user is new to the game
+     * Initializes the scoreList, if the user is new to the game.
      *
-     * from index 0 to 4, it stores the scores of complexity of 3 x 3
-     * from index 5 to 9, it stores the scores of complexity of 4 x 4
-     * from index 10 to 14, it stores the scores of complexity of 5 x 5
+     * from index 0 to 4, it stores the scores of "easy"
+     * from index 5 to 9, it stores the scores of "medium"
+     * from index 10 to 14, it stores the scores of "hard"
+     * from index 15 to 19, it stores the scores of "very hard"
      *
      */
     public void setDefaultValueForArray(){
-        String username;
-        if(activeUser == null){
-            username = "Guest";
-        }else{
-            username = activeUser.getUsername();
-        }
+
         String difficulty;
         for (int counter = 0; counter < 20; counter ++){
             if(counter < 5){
@@ -552,26 +683,73 @@ public class MyCheckersActivity extends AppCompatActivity {
             }else{
                 difficulty = "Very Hard";
             }
-            Score score = new Score (username,0, difficulty, "");
+            Score score = new Score (currentUser,0, difficulty, "");
             scoreList.add(score);
         }
     }
 
+
+    /**
+     * After the game is won by the plays, this method saves the user, score and the
+     * game progress.
+     *
+     * @param status whether the player wins the game
+     * @param difficulty the difficulty chosen by the player
+     */
     public void setWinStatus(boolean status, String difficulty){
         winStatus = status;
-        System.out.println("winStatus is " + winStatus);
         if(winStatus == true){
             System.out.println("Inside the method");
             double endTime = System.currentTimeMillis();
             int finalScore = calculateFinalScore(difficulty, endTime, startTime);
 
-            if (activeUser == null){
-                saveLastUser("Guest");
-            }else{
-                saveLastUser(activeUser.getUsername());
-            }
-            saveScoreToFile(activeUser, finalScore,difficulty );
+            saveLastUser(currentUser);
+            saveScoreToFile(finalScore,difficulty );
+            gamelogic = new CheckersGame(prefAllowAnyMove);
+            saveToFile(currentUser + CHECKERS_SAVE_FILE);
+
+            File file = getFileStreamPath(currentUser+ CHECKERS_SAVE_FILE);
+            file.delete();
         }
     }
 
+    /**
+     * Save the CheckersGame object to fileName.
+     *
+     * @param fileName the name of the file
+     */
+    public void saveToFile(String fileName) {
+        try {
+            ObjectOutputStream outputStream = new ObjectOutputStream(
+                    this.openFileOutput(fileName, MODE_PRIVATE));
+            outputStream.writeObject(gamelogic);
+            outputStream.close();
+        } catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
+        }
+    }
+
+    /**
+     * Loads the CheckersGame object from fileName.
+     *
+     * @param fileName the name of the file
+     */
+    private void loadFromFile(String fileName) {
+
+        try {
+            InputStream inputStream = this.openFileInput(fileName);
+            if (inputStream != null) {
+                ObjectInputStream input = new ObjectInputStream(inputStream);
+                gamelogic = (CheckersGame) input.readObject();
+                inputStream.close();
+            }
+        } catch (FileNotFoundException e) {
+            gamelogic = new CheckersGame(prefAllowAnyMove);
+            Log.e("login activity", "File not found: " + e.toString());
+        } catch (IOException e) {
+            Log.e("login activity", "Can not read file: " + e.toString());
+        } catch (ClassNotFoundException e) {
+            Log.e("login activity", "File contained unexpected data type: " + e.toString());
+        }
+    }
 }

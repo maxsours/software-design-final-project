@@ -7,12 +7,24 @@ import android.view.View;
 
 import fall2018.csc2017.slidingtiles.R;
 
+/*
+ * Adapted from a open source project from Jerry Jiang:
+ * https://github.com/tpcstld/2048/blob/master/2048/2048/src/main/java/com/tpcstld/twozerogame/InputListener.java
+ */
+
+
+
+
+
+/**
+ * Collects and interprets the movements of the user on the touch screen to game actions
+ */
 class InputListener implements View.OnTouchListener {
 
-    private static final int SWIPE_MIN_DISTANCE = 0;
-    private static final int SWIPE_THRESHOLD_VELOCITY = 25;
-    private static final int MOVE_THRESHOLD = 250;
-    private static final int RESET_STARTING = 10;
+    private static final int SWIPE_MIN_DISTANCE = 0; //minimum distance for a swipe to count as a swipe
+    private static final int SWIPE_THRESHOLD_VELOCITY = 25; //minimum velocity for the swipe to be counted
+    private static final int MOVE_THRESHOLD = 250; // above this distance, the move counts
+    private static final int RESET_STARTING = 10; //threshold to reset to the previous position
     private final MainView mView;
     private float x;
     private float y;
@@ -30,11 +42,21 @@ class InputListener implements View.OnTouchListener {
     // the press on an icon.
     private boolean beganOnIcon = false;
 
+    /**
+     * Create new inputListener
+     * @param view the view being used
+     */
     public InputListener(MainView view) {
         super();
         this.mView = view;
     }
 
+    /**
+     * Execute the appropriate action when touched
+     * @param view the current view
+     * @param event the event described by the motion
+     * @return true
+     */
     public boolean onTouch(View view, MotionEvent event) {
         switch (event.getAction()) {
 
@@ -148,19 +170,41 @@ class InputListener implements View.OnTouchListener {
         return true;
     }
 
+    /**
+     * The distance moved
+     * @return the distance moved
+     */
     private float pathMoved() {
         return (x - startingX) * (x - startingX) + (y - startingY) * (y - startingY);
     }
 
+    /**
+     * Return true iff the icon is pressed
+     * @param sx lower bound for x
+     * @param sy lower bound for y
+     * @return true iff the icon is pressed
+     */
     private boolean iconPressed(int sx, int sy) {
         return isTap(1) && inRange(sx, x, sx + mView.iconSize)
                 && inRange(sy, y, sy + mView.iconSize);
     }
 
+    /**
+     * Return true iff the check is within the range bounded by starting and ending
+     * @param starting lower bound
+     * @param check the value to be checked
+     * @param ending upper bound
+     * @return true iff the check is within [starting, ending]
+     */
     private boolean inRange(float starting, float check, float ending) {
         return (starting <= check && check <= ending);
     }
 
+    /**
+     * Return true iff the screen is tapped
+     * @param factor precision factor the screen must be pressed to register as a tap
+     * @return true iff the screen is tapped
+     */
     private boolean isTap(int factor) {
         return pathMoved() <= mView.iconSize * mView.iconSize * factor;
     }

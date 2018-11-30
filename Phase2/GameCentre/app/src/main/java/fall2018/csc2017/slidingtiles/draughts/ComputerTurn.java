@@ -2,22 +2,59 @@ package fall2018.csc2017.slidingtiles.draughts;
 
 import android.os.AsyncTask;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-import fall2018.csc2017.slidingtiles.draughts.game.Board;
+import fall2018.csc2017.slidingtiles.draughts.game.CheckerBoard;
 import fall2018.csc2017.slidingtiles.draughts.game.CheckersGame;
 import fall2018.csc2017.slidingtiles.draughts.game.Move;
 import fall2018.csc2017.slidingtiles.draughts.game.Piece;
 
-public class ComputerTurn extends AsyncTask<String, String, String>
+/**
+ * Responds to the Users move with an automated opponent checker move.
+ * Adapted on 2018/11/15 from an openly available applet by Greg Tour:
+ * https://github.com/gregtour/CheckersAndroid
+ */
+public class ComputerTurn extends AsyncTask<String, String, String> implements Serializable
 {
+    /**
+     * The currently played checker game's activity.
+     */
     private MyCheckersActivity myActivity;
+
+    /**
+     * The current played checker game.
+     */
     private CheckersGame myGame;
+
+    /**
+     * The currently played checker game's difficulty.
+     */
     private String myDifficulty;
+
+    /**
+     * The selected move by ComputerTurn.
+     */
     private Move selectedMove;
+
+    /**
+     * Whether any move is permitted in the currently played checker game.
+     */
     private boolean allowAnyMove;
+
+    /**
+     * Whether the game has been won.
+     */
     private boolean wonStatus ;
 
+    /**
+     * The constructor for ComputerTurn
+     *
+     * @param activity the new/current MyCheckersActivity
+     * @param game the new/current CheckersGame
+     * @param difficulty the difficulty of the game
+     * @param allowAny whether any move is permitted in the game
+     */
     public ComputerTurn(MyCheckersActivity activity,
                         CheckersGame game,
                         String difficulty,
@@ -33,17 +70,25 @@ public class ComputerTurn extends AsyncTask<String, String, String>
         wonStatus = false;
     }
 
-    protected int minimax(Board base, int turn, int depth)
+    /**
+     *The algorithm for the the AI to play the checkers
+     *
+     * @param base the currently played CheckerBoard
+     * @param turn whether it is the AI's turn
+     * @param depth the current depth of search for the algorithm.
+     * @return the algorithm's decided move
+     */
+    protected int minimax(CheckerBoard base, int turn, int depth)
     {
         int oppositeTurn = (turn == CheckersGame.RED ? CheckersGame.BLACK : CheckersGame.RED);
         Move[] baseMoves = base.getMoves(turn, allowAnyMove);
 
         int score = 999;
 
-        int[][] data = base.saveBoard();
+        Integer [][] data = base.saveBoard();
         for (Move move : baseMoves)
         {
-            Board specificBoard = new Board(data);
+            CheckerBoard specificBoard = new CheckerBoard(data);
             specificBoard.makeMove(move);
 
             int moveScore;
@@ -58,27 +103,30 @@ public class ComputerTurn extends AsyncTask<String, String, String>
             }
 
             if (turn == CheckersGame.RED) {
-                // MIN
                 score = (moveScore < score) ? moveScore : score;
             } else if (turn == CheckersGame.BLACK) {
-                // MAX
                 score = (moveScore > score) ? moveScore : score;
             }
         }
         return score;
     }
 
+    /**
+     * Determines whether the AI should use a random move; plays random move if deemed appropriate.
+     * @param depth the current depth of search for the algorithm.
+     * @return random move
+     */
     protected Move Minimax(int depth)
     {
-        Board realBoard = myGame.getBoard();
+        CheckerBoard realBoard = myGame.getBoard();
         Move moves[] = myGame.getMoves();
 
-        int[][] data = realBoard.saveBoard();
+        Integer[][] data = realBoard.saveBoard();
 
         ArrayList<Move> bestMoves = new ArrayList<>();
         int bestScore = 1000;
         for (Move move : moves) {
-            Board moveBoard = new Board(data);
+            CheckerBoard moveBoard = new CheckerBoard(data);
             moveBoard.makeMove(move);
             int score = minimax(moveBoard, CheckersGame.BLACK, depth);
             if (score < bestScore) {
@@ -114,13 +162,11 @@ public class ComputerTurn extends AsyncTask<String, String, String>
 
         if (difficulty == 0)
         {
-            // easy CPU chooses move randomly
             int num = (int)(moves.length * Math.random());
             selectedMove = moves[num];
         }
         else if (difficulty == 1)
         {
-            // medium CPU looks for most captures or kings
             selectedMove = moves[0];
 
             ArrayList<Move> selectedMoves = new ArrayList<>();
@@ -134,7 +180,6 @@ public class ComputerTurn extends AsyncTask<String, String, String>
                     score += 2;
                 }
                 if (score > curScore) {
-                    //selectedMove = option;
                     selectedMoves.clear();
                     selectedMoves.add(option);
                     curScore = score;
@@ -153,7 +198,6 @@ public class ComputerTurn extends AsyncTask<String, String, String>
         }
         else
         {
-            // sleep on easy/medium
             try {
                 Thread.sleep(1000);
             } catch (Exception e) {}
@@ -170,11 +214,10 @@ public class ComputerTurn extends AsyncTask<String, String, String>
                 myGame.makeMove(selectedMove);
                 myActivity.prepTurn();
             } else {
-                // player wins
                 myActivity.statusText.setText("You won!");
                 wonStatus = true;
 
-                myActivity.setWinStatus(true, myDifficulty);
+                myActivity.setWinStatus(wonStatus, myDifficulty);
             }
         }
     }

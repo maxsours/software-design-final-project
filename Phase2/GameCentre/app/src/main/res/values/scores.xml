@@ -7,5 +7,4 @@
     <string name="size_4_title"> Your High Score for 4 x 4</string>
     <string name="size_5_title"> Your High Score for 5 x 5</string>
     <string name="summary" >Score Summary</string>
-    <string name="game_summary"> Your High Score for Each Game</string>
 </resources>

@@ -1,13 +1,37 @@
 package fall2018.csc2017.slidingtiles.Game2048;
 
+
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+
+import fall2018.csc2017.slidingtiles.GameActivity;
+import fall2018.csc2017.slidingtiles.Score;
+import fall2018.csc2017.slidingtiles.User;
+
+
+/*
+ * Adapted from a open source project from Jerry Jiang:
+ * https://github.com/tpcstld/2048/blob/master/2048/2048/src/main/java/com/tpcstld/twozerogame/MainActivity.java
+ */
+
 
 public class MainActivity extends AppCompatActivity {
 
+    // String identifiers used for the savedInstanceState
     private static final String WIDTH = "width";
     private static final String HEIGHT = "height";
     private static final String SCORE = "score";
@@ -17,12 +41,34 @@ public class MainActivity extends AppCompatActivity {
     private static final String UNDO_GRID = "undo";
     private static final String GAME_STATE = "game state";
     private static final String UNDO_GAME_STATE = "undo game state";
+    private final String SCORE_FILENAME_TEMPLATE = "_2048_score_save_file.ser";
+    private String game2048SaveFile;
+    private Score newHighScore;
+
     private MainView view;
+
+    /**
+     * List of users
+     */
+    private ArrayList<User> users = new ArrayList<>(0);
+    /**
+     * List of scores
+     */
+    private ArrayList<Score> scoreList = new ArrayList<>(5);
+    private String currentUser; // string denoting the current user ("Guest" if not logged in)
+    private User activeUser; // the active user
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         view = new MainView(this);
+
+        activeUser = getUserFromUsername(getIntent().getStringExtra("activeUser"));
+        if (activeUser == null){
+            currentUser = "Guest";
+        }else{
+            currentUser = activeUser.getUsername();
+        }
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         view.hasSaveState = settings.getBoolean("save_state", false);
@@ -63,11 +109,17 @@ public class MainActivity extends AppCompatActivity {
         save();
     }
 
+    /**
+     * Save the game when paused
+     */
     protected void onPause() {
         super.onPause();
         save();
     }
 
+    /**
+     * Save the game
+     */
     private void save() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = settings.edit();
@@ -97,13 +149,21 @@ public class MainActivity extends AppCompatActivity {
         editor.putInt(GAME_STATE, view.game.gameState);
         editor.putInt(UNDO_GAME_STATE, view.game.lastGameState);
         editor.commit();
+
+        saveScoreToFile();
     }
 
+    /**
+     * Load the game when resumed
+     */
     protected void onResume() {
         super.onResume();
         load();
     }
 
+    /**
+     * Load the game
+     */
     private void load() {
         //Stopping all animations
         view.game.aGrid.cancelAnimations();
@@ -133,5 +193,151 @@ public class MainActivity extends AppCompatActivity {
         view.game.canUndo = settings.getBoolean(CAN_UNDO, view.game.canUndo);
         view.game.gameState = settings.getInt(GAME_STATE, view.game.gameState);
         view.game.lastGameState = settings.getInt(UNDO_GAME_STATE, view.game.lastGameState);
+    }
+
+    /**
+     * Given a username, return the user
+     * @param username the username
+     * @return the user with the input username
+     */
+    public User getUserFromUsername(String username){
+        if (username != null) {
+            for (User user : users) {
+                if (user.getUsername().equals(username)) {
+                    return user;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Save the score to the file
+     */
+    public void saveScoreToFile(){
+        try {
+
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            Date date = new Date();
+            String dateToday = formatter.format(date);
+            game2048SaveFile = currentUser + SCORE_FILENAME_TEMPLATE;
+
+            newHighScore = new Score(currentUser, (int) view.game.score, dateToday);
+            setDefaultValueForArray();
+            loadScoreFromFile(game2048SaveFile);
+            compareScore(newHighScore);
+            ObjectOutputStream outputStream = new ObjectOutputStream(
+                    this.openFileOutput(game2048SaveFile, MODE_PRIVATE));
+            outputStream.writeObject(scoreList);
+            outputStream.close();
+            saveLastUser(currentUser);
+        } catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
+        }
+    }
+
+    /**
+     * get the list of score
+     *
+     * @param fileName name of the file
+     */
+    public void loadScoreFromFile(String fileName){
+        try {
+            InputStream inputStream = this.openFileInput(fileName);
+            if (inputStream != null) {
+                ObjectInputStream input = new ObjectInputStream(inputStream);
+                scoreList = (ArrayList<Score>)input.readObject();
+                inputStream.close();
+            }
+        } catch (FileNotFoundException e) {
+            Log.e("loadScoreFromFile", "File not found: " + e.toString());
+        } catch (IOException e) {
+            Log.e("loadScoreFromFile", "Can not read file: " + e.toString());
+        } catch (ClassNotFoundException e) {
+            Log.e("loadScoreFromFile", "File contained unexpected data type: " + e.toString());
+        }
+    }
+
+    /**
+     * Set a default value for the score list
+     */
+    public void setDefaultValueForArray(){
+        for (int counter = 0; counter < 5; counter ++){
+            Score score = new Score (currentUser,0, "");
+            scoreList.add(score);
+        }
+    }
+
+    /**
+     * Save the currently active user.
+     *
+     * @param username the username of the user.
+     */
+    public void saveLastUser(String username){
+        try {
+            ObjectOutputStream outputStream = new ObjectOutputStream(
+                    this.openFileOutput(GameActivity.LAST_USER_FILE, MODE_PRIVATE));
+            outputStream.writeObject(username);
+            outputStream.close();
+        } catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
+        }
+    }
+
+    /**
+     * sort all the scores according to its puzzle size and score
+     *
+     * @param other the other score to add.
+     */
+    private void compareScore(Score other){
+        ArrayList<Score> temp = new ArrayList<>();
+        int tempCounter;
+
+
+        for(int  counter = 0; counter < 5; counter ++){
+            temp.add(scoreList.get(counter));
+        }
+
+        int distinctContent = 0;
+
+        for(Score score : temp){
+            if(score.getScore() != other.getScore()){
+                distinctContent++;
+            }
+        }
+
+        if(distinctContent == 5){
+            temp.add(other);
+            Collections.sort(temp);
+            tempCounter = searchNonZeroIndex(temp);
+
+            int pointer = temp.size() -1 ;
+            for(int counter = 0; counter < 5; counter ++){
+                if(tempCounter <= pointer){
+                    scoreList.set(counter, temp.get(pointer));
+                    pointer--;
+                }else{
+                    scoreList.set(counter, new Score(currentUser,0, ""));
+                }
+            }
+        }
+    }
+
+    /**
+     * determine the index in the scoreList where the score is != 0
+     * @param temp the scorelist.
+     * @return the index where score is 0.
+     */
+    public int searchNonZeroIndex(ArrayList<Score> temp){
+        int index = 0;
+
+        while(index < temp.size()){
+            if(temp.get(index).getScore() != 0){
+                break;
+            }
+            index ++;
+        }
+        System.out.println("index is " + index);
+        return index;
     }
 }

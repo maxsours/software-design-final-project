@@ -14,7 +14,19 @@ import android.view.View;
 import java.util.ArrayList;
 
 import fall2018.csc2017.slidingtiles.R;
+
+
+/*
+ * Adapted from a open source project from Jerry Jiang:
+ * https://github.com/tpcstld/2048/blob/master/2048/2048/src/main/java/com/tpcstld/twozerogame/MainView.java
+ */
+
+
+
 @SuppressWarnings("deprecation")
+/**
+ * The main view of the 2048 game
+ */
 public class MainView extends View {
 
     //Internal Constants
@@ -71,10 +83,15 @@ public class MainView extends View {
     private int eYAll;
     private int titleWidthHighScore;
     private int titleWidthScore;
+    private boolean hasLost;
 
+    /**
+     * Create a new MainView
+     * @param context the activity this view is located in
+     */
     public MainView(Context context) {
         super(context);
-
+        this.hasLost = false;
         Resources resources = context.getResources();
         //Loading resources
         game = new MainGame(context, this);
@@ -94,6 +111,11 @@ public class MainView extends View {
         game.newGame();
     }
 
+    /**
+     * Return floor(lg(n))
+     * @param n the integer to be operated on
+     * @return floor(lg(n))
+     */
     private static int log2(int n) {
         if (n <= 0) throw new IllegalArgumentException();
         return 31 - Integer.numberOfLeadingZeros(n);
@@ -141,11 +163,25 @@ public class MainView extends View {
         createOverlays();
     }
 
+    /**
+     * Draw the drawable on the canvas within the starting and ending coordinates
+     * @param canvas the canvas to draw on
+     * @param draw the drawable to be drawn
+     * @param startingX starting bound for x
+     * @param startingY starting bound for y
+     * @param endingX ending bound for x
+     * @param endingY ending bound for y
+     */
     private void drawDrawable(Canvas canvas, Drawable draw, int startingX, int startingY, int endingX, int endingY) {
         draw.setBounds(startingX, startingY, endingX, endingY);
         draw.draw(canvas);
     }
 
+    /**
+     * Draw the value on the cell
+     * @param canvas the canvas to draw on
+     * @param value value to be written
+     */
     private void drawCellText(Canvas canvas, int value) {
         int textShiftY = centerText();
         if (value >= 8) {
@@ -156,6 +192,10 @@ public class MainView extends View {
         canvas.drawText("" + value, cellSize / 2, cellSize / 2 - textShiftY, paint);
     }
 
+    /**
+     * Display the score text
+     * @param canvas canvas to draw on
+     */
     private void drawScoreText(Canvas canvas) {
         //Drawing the score text: Ver 2
         paint.setTextSize(bodyTextSize);
@@ -198,6 +238,11 @@ public class MainView extends View {
         canvas.drawText(String.valueOf(game.score), sXScore + textMiddleScore, bodyStartYAll, paint);
     }
 
+    /**
+     * Display new game button
+     * @param canvas canvas to draw on
+     * @param lightUp true if lit up, false if background
+     */
     private void drawNewGameButton(Canvas canvas, boolean lightUp) {
 
         if (lightUp) {
@@ -226,6 +271,10 @@ public class MainView extends View {
         );
     }
 
+    /**
+     * Draw undo button
+     * @param canvas canvas to draw on
+     */
     private void drawUndoButton(Canvas canvas) {
 
         drawDrawable(canvas,
@@ -244,6 +293,10 @@ public class MainView extends View {
         );
     }
 
+    /**
+     * Draw the header
+     * @param canvas canvas to draw on
+     */
     private void drawHeader(Canvas canvas) {
         paint.setTextSize(headerTextSize);
         paint.setColor(getResources().getColor(R.color.text_black));
@@ -253,6 +306,10 @@ public class MainView extends View {
         canvas.drawText(getResources().getString(R.string.header), startingX, headerStartY, paint);
     }
 
+    /**
+     * Draw the instructions
+     * @param canvas canvas to draw on
+     */
     private void drawInstructions(Canvas canvas) {
         paint.setTextSize(instructionsTextSize);
         paint.setTextAlign(Paint.Align.LEFT);
@@ -261,11 +318,18 @@ public class MainView extends View {
                 startingX, endingY - textShiftY + textPaddingSize, paint);
     }
 
+    /**
+     * Draw the background
+     * @param canvas canvas to draw on
+     */
     private void drawBackground(Canvas canvas) {
         drawDrawable(canvas, backgroundRectangle, startingX, startingY, endingX, endingY);
     }
 
-    //Renders the set of 16 background squares.
+    /**
+     * Renders the set of 16 background squares.
+     * @param canvas canvas to draw on
+     */
     private void drawBackgroundGrid(Canvas canvas) {
         Resources resources = getResources();
         Drawable backgroundCell = resources.getDrawable(R.drawable.cell_rectangle);
@@ -282,6 +346,10 @@ public class MainView extends View {
         }
     }
 
+    /**
+     * Render the cells
+     * @param canvas canvas to draw on
+     */
     private void drawCells(Canvas canvas) {
         paint.setTextSize(textSize);
         paint.setTextAlign(Paint.Align.CENTER);
@@ -357,6 +425,10 @@ public class MainView extends View {
         }
     }
 
+    /**
+     * Render end game state
+     * @param canvas canvas to draw on
+     */
     private void drawEndGameState(Canvas canvas) {
         double alphaChange = 1;
         continueButtonEnabled = false;
@@ -384,6 +456,10 @@ public class MainView extends View {
         }
     }
 
+    /**
+     * Render text for endless mode
+     * @param canvas canvas to draw on
+     */
     private void drawEndlessText(Canvas canvas) {
         paint.setTextAlign(Paint.Align.LEFT);
         paint.setTextSize(bodyTextSize);
@@ -391,6 +467,12 @@ public class MainView extends View {
         canvas.drawText(getResources().getString(R.string.endless), startingX, sYIcons - centerText() * 2, paint);
     }
 
+    /**
+     * Render the end game states
+     * @param canvas canvas to draw on
+     * @param win true iff the player has won
+     * @param showButton iff the button is to be shown
+     */
     private void createEndGameStates(Canvas canvas, boolean win, boolean showButton) {
         int width = endingX - startingX;
         int length = endingY - startingY;
@@ -419,9 +501,16 @@ public class MainView extends View {
             paint.setTextSize(gameOverTextSize);
             paint.setTextAlign(Paint.Align.CENTER);
             canvas.drawText(getResources().getString(R.string.game_over), middleX, middleY - centerText(), paint);
+            hasLost = true;
+            System.out.println("hasLost is " + hasLost);
         }
     }
 
+    /**
+     * Create the background
+     * @param width width of background
+     * @param height height of background
+     */
     private void createBackgroundBitmap(int width, int height) {
         background = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(background);
@@ -434,6 +523,9 @@ public class MainView extends View {
 
     }
 
+    /**
+     * Create the bitmap cells
+     */
     private void createBitmapCells() {
         Resources resources = getResources();
         int[] cellRectangleIds = getCellRectangleIds();
@@ -451,6 +543,10 @@ public class MainView extends View {
         }
     }
 
+    /**
+     * Get the ids for all the cell images
+     * @return the id for the right cell image
+     */
     private int[] getCellRectangleIds() {
         int[] cellRectangleIds = new int[numCellTypes];
         cellRectangleIds[0] = R.drawable.cell_rectangle;
@@ -471,6 +567,9 @@ public class MainView extends View {
         return cellRectangleIds;
     }
 
+    /**
+     * Create the overlays
+     */
     private void createOverlays() {
         Resources resources = getResources();
         //Initialize overlays
@@ -488,16 +587,27 @@ public class MainView extends View {
         loseGameOverlay = new BitmapDrawable(resources, bitmap);
     }
 
+    /**
+     * Tick the animations forward
+     */
     private void tick() {
         long currentTime = System.nanoTime();
         game.aGrid.tickAll(currentTime - lastFPSTime);
         lastFPSTime = currentTime;
     }
 
+    /**
+     * Synchronize the time
+     */
     public void resyncTime() {
         lastFPSTime = System.nanoTime();
     }
 
+    /**
+     * Get the game layout
+     * @param width width of layout
+     * @param height height of layout
+     */
     private void getLayout(int width, int height) {
         cellSize = Math.min(width / (game.numSquaresX + 1), height / (game.numSquaresY + 3));
         gridWidth = cellSize / 7;
@@ -562,8 +672,11 @@ public class MainView extends View {
         resyncTime();
     }
 
+    /**
+     * Center the text
+     * @return the average of the distance below and above the baseline
+     */
     private int centerText() {
         return (int) ((paint.descent() + paint.ascent()) / 2);
     }
-
 }
